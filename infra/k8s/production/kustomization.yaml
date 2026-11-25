@@ -12,6 +12,6 @@ resources:
 - poddisruptionbudget.yaml
 - network-policy.yaml
 images:
-- digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+- digest: sha256:c5de485378015ac26e8e62bcdcc182c80d933286ac1425dc00e88fe28547f067
   name: ghcr.io/madfam-org/camsync-landing
   newName: ghcr.io/madfam-org/camsync-landing
