@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-24T00:00:00-06:00",
+  "title": "Design System: camsync",
+  "extensions": {
+    "colorMeta": {
+      "obsidian": { "role": "neutral", "displayName": "Obsidian", "canonical": "#0a0e27", "tonalRamp": ["#0d0f1c", "#1d244b", "#2a357e", "#3244b5", "#5868cf", "#8e98d8", "#c0c5e5", "#eeeff7"] },
+      "deep": { "role": "neutral", "displayName": "Deep Indigo", "canonical": "#0c1131", "tonalRamp": ["#0d0f1c", "#1d234b", "#29347f", "#3043b7", "#5667d0", "#8d97d9", "#c0c5e6", "#eeeff7"] },
+      "panel": { "role": "neutral", "displayName": "Panel Indigo", "canonical": "#12173a", "tonalRamp": ["#0e0f1b", "#202548", "#2e3879", "#3948ae", "#5e6cc8", "#929ad4", "#c2c6e3", "#eeeff6"] },
+      "rule": { "role": "neutral", "displayName": "Rule Indigo", "canonical": "#1d2347", "tonalRamp": ["#0f111a", "#242944", "#363f72", "#4552a2", "#6975bd", "#99a0cd", "#c5c9e0", "#eff0f5"] },
+      "edge": { "role": "neutral", "displayName": "Edge Indigo", "canonical": "#2f3561", "tonalRamp": ["#101119", "#272a41", "#3b416c", "#4d569a", "#7079b6", "#9da2c9", "#c8cadd", "#f0f0f5"] },
+      "dash": { "role": "neutral", "displayName": "Dash Indigo", "canonical": "#3b4277", "tonalRamp": ["#101119", "#272a41", "#3c416c", "#4e5799", "#7179b5", "#9ea3c8", "#c8cadd", "#f0f0f5"] },
+      "pearl": { "role": "neutral", "displayName": "Pearl", "canonical": "#fafafa", "tonalRamp": ["#141414", "#343434", "#545454", "#737373", "#939393", "#b3b3b3", "#d3d3d3", "#f2f2f2"] },
+      "stone": { "role": "neutral", "displayName": "Stone", "canonical": "#d2d3cc", "tonalRamp": ["#151513", "#363731", "#58594f", "#797c6b", "#989b8c", "#b6b7ae", "#d4d5d0", "#f3f3f2"] },
+      "muted": { "role": "neutral", "displayName": "Muted Sage", "canonical": "#a1a49c", "tonalRamp": ["#151514", "#343632", "#555751", "#75786f", "#94978f", "#b4b5b0", "#d3d4d1", "#f2f3f2"] },
+      "green": { "role": "primary", "displayName": "Logo Green", "canonical": "#2c8136", "tonalRamp": ["#0e1b10", "#214726", "#317739", "#3daa4a", "#62c46d", "#94d19b", "#c3e2c7", "#eff6ef"] },
+      "green-deep": { "role": "primary", "displayName": "Deep Logo Green", "canonical": "#23692b", "tonalRamp": ["#0e1b10", "#214725", "#307738", "#3cab49", "#61c56c", "#94d29b", "#c3e2c6", "#eef6ef"] },
+      "on-green": { "role": "neutral", "displayName": "On-Green White", "canonical": "#ffffff", "tonalRamp": ["#141414", "#343434", "#545454", "#737373", "#939393", "#b3b3b3", "#d3d3d3", "#ffffff"] },
+      "yellow": { "role": "secondary", "displayName": "Logo Yellow", "canonical": "#eebc15", "tonalRamp": ["#1f1a09", "#554613", "#917517", "#d3a714", "#eac23c", "#e9d07d", "#eee1b7", "#f9f6ec"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The one page headline; two lines, the second phrase a yellow block." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles below the fold." },
+      "title": { "displayName": "Title", "purpose": "Stop names in the path." },
+      "lede": { "displayName": "Lede", "purpose": "The paragraph under the headline, in stone, max 40rem." },
+      "body": { "displayName": "Body", "purpose": "Running text; measures held at 42-44rem." },
+      "label": { "displayName": "Label", "purpose": "Captions, run label, table headers, figure descriptions, footer; sentence case, muted." },
+      "figure": { "displayName": "Figure", "purpose": "Measured figures beside the frame; monospace with tabular numerals." },
+      "mono": { "displayName": "Mono", "purpose": "Commands, inline code, source labels, REC readout, table values." }
+    },
+    "shadows": [
+      { "name": "frame-lift", "value": "0 1.5rem 3rem -1rem rgb(0 0 0 / 0.6)", "purpose": "Under the 9:16 program frame only; the one raised object." },
+      { "name": "knockout-ring", "value": "0 0 0 3px #0a0e27", "purpose": "Separates the yellow convergence point from the lines beneath it; a ring, not elevation." }
+    ],
+    "motion": [
+      { "name": "ease-house", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Every transition and keyframe." },
+      { "name": "line-draw", "value": "1.6s ease-house, clip-path inset reveal (left to right; top to bottom when the diagram stands up)", "purpose": "The live source line draws in once." },
+      { "name": "point-meet", "value": "0.6s ease-house, 1.2s delay, scale 0.2 and opacity 0 to rest", "purpose": "The convergence point arrives as the live line lands." },
+      { "name": "button-state", "value": "0.2s ease-house on background and transform", "purpose": "Primary button hover darken and 1px lift." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce): animation none, transition none", "purpose": "All motion is removed." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "max-width: 34rem" },
+      { "name": "diagram-stands-up", "value": "max-width: 62rem" },
+      { "name": "short-desktop", "value": "min-width: 62.01rem and max-height: 50rem" }
+    ],
+    "constraints": [
+      "No script, no inline style attribute, no web font, no image or video file, no third-party request; CSP default-src 'none'.",
+      "Exactly one outbound link: the public repository.",
+      "Drawn with CSS and inline SVG only."
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action per view: Logo Green fill, white text, 8px radius.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Ver el código</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; min-height: 2.875rem; padding: 0 1.25rem; border-radius: 0.5rem; background: var(--green, #2c8136); color: #fff; font: 650 1.0625rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; text-decoration: none; transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { background: var(--green-deep, #23692b); transform: translateY(-1px); } .ds-btn-primary:active { transform: translateY(0); } .ds-btn-primary:focus-visible { outline: 2px solid var(--yellow, #eebc15); outline-offset: 3px; }"
+    },
+    {
+      "name": "Command Block with Action",
+      "kind": "custom",
+      "refersTo": "command-block",
+      "description": "The command to run, selectable whole, beside the primary button with a muted label above.",
+      "html": "<div class=\"ds-run\"><p class=\"ds-run-label\">Con Node 22 o más reciente, desde la carpeta clonada del repositorio</p><code class=\"ds-cmd\">node studio/server.mjs</code><a class=\"ds-run-go\" href=\"#\">Ver el código</a></div>",
+      "css": ".ds-run { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 0.875rem; background: var(--obsidian, #0a0e27); padding: 1rem; } .ds-run-label { flex-basis: 100%; margin: 0; font: 400 0.8125rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--muted, #a1a49c); } .ds-cmd { font: 400 0.9375rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; color: var(--pearl, #fafafa); background: var(--panel, #12173a); border: 1px solid var(--edge, #2f3561); border-radius: 0.5rem; padding: 0.75rem 1rem; user-select: all; } .ds-run-go { display: inline-flex; align-items: center; min-height: 2.875rem; padding: 0 1.25rem; border-radius: 0.5rem; background: var(--green, #2c8136); color: #fff; font: 650 1.0625rem -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; text-decoration: none; transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-run-go:hover { background: var(--green-deep, #23692b); } .ds-run-go:focus-visible, .ds-cmd:focus-visible { outline: 2px solid var(--yellow, #eebc15); outline-offset: 3px; }"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "chip-tag",
+      "description": "The only chip: outlined pill in the top bar saying what the page is.",
+      "html": "<span class=\"ds-tag\">Herramienta de MADFAM · nombre clave</span>",
+      "css": ".ds-tag { display: inline-block; border: 1px solid var(--edge, #2f3561); border-radius: 999px; padding: 0.15rem 0.65rem; font: 400 0.75rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--muted, #a1a49c); background: var(--obsidian, #0a0e27); }"
+    },
+    {
+      "name": "Top Bar",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "One row on obsidian: name, status chip, other-language link pushed right; hairline below.",
+      "html": "<header class=\"ds-bar\"><a class=\"ds-bar-name\" href=\"#\">camsync</a><span class=\"ds-bar-tag\">Herramienta de MADFAM · nombre clave</span><a class=\"ds-bar-lang\" href=\"#\">English</a></header>",
+      "css": ".ds-bar { display: flex; align-items: center; gap: 1rem; padding: 1.1rem clamp(1.25rem, 4vw, 3.5rem); border-bottom: 1px solid var(--rule, #1d2347); background: var(--obsidian, #0a0e27); font: 400 0.875rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--muted, #a1a49c); } .ds-bar-name { color: var(--pearl, #fafafa); font-weight: 700; font-size: 1.125rem; letter-spacing: 0.01em; text-decoration: none; } .ds-bar-tag { border: 1px solid var(--edge, #2f3561); border-radius: 999px; padding: 0.15rem 0.65rem; font-size: 0.75rem; } .ds-bar-lang { margin-left: auto; color: var(--muted, #a1a49c); text-decoration-color: var(--green, #2c8136); text-decoration-thickness: 0.1em; text-underline-offset: 0.22em; } .ds-bar a:hover { color: var(--yellow, #eebc15); } .ds-bar a:focus-visible { outline: 2px solid var(--yellow, #eebc15); outline-offset: 3px; border-radius: 4px; }"
+    },
+    {
+      "name": "Program Frame",
+      "kind": "custom",
+      "refersTo": "program-frame",
+      "description": "Signature: the 9:16 program with REC readout, dashed safe area, caption, and the yellow convergence point on its edge.",
+      "html": "<div class=\"ds-frame\"><span class=\"ds-rec\"><span class=\"ds-dot\"></span>REC 00:00:42</span><span class=\"ds-safe\"></span><span class=\"ds-cap\"><span class=\"ds-mono\">9:16</span> · original completo, sin recortar</span></div>",
+      "css": ".ds-frame { position: relative; height: 22rem; aspect-ratio: 9 / 16; margin: 1rem 1.5rem; border: 2px solid var(--pearl, #fafafa); border-radius: 1.25rem; background: linear-gradient(180deg, #151b47, var(--deep, #0c1131)); box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.6); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-frame::before { content: ''; position: absolute; left: -0.5rem; top: 50%; width: 0.875rem; height: 0.875rem; margin-top: -0.4375rem; border-radius: 50%; background: var(--yellow, #eebc15); box-shadow: 0 0 0 3px var(--obsidian, #0a0e27); } .ds-rec { position: absolute; top: 0.9rem; left: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem; font: 400 0.75rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; color: var(--yellow, #eebc15); } .ds-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: currentColor; } .ds-safe { position: absolute; inset: 13% 7% 19% 7%; border: 1px dashed var(--dash, #3b4277); border-radius: 0.375rem; } .ds-cap { position: absolute; left: 0.75rem; right: 0.75rem; bottom: 1rem; text-align: center; font-size: 0.6875rem; line-height: 1.35; color: var(--muted, #a1a49c); } .ds-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }"
+    },
+    {
+      "name": "Source Lines (stacked)",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature: each source led by its stroke; solid pearl when it exists, dashed indigo when not built.",
+      "html": "<ul class=\"ds-sources\"><li class=\"ds-live\">iPhone · hoy · original 2160 × 3840 · 30 fps</li><li>segunda cámara · aún no existe</li><li>pantalla · aún no existe</li></ul>",
+      "css": ".ds-sources { list-style: none; margin: 0; padding: 1rem; display: grid; gap: 0.55rem; background: var(--obsidian, #0a0e27); font: 400 0.8125rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; color: var(--muted, #a1a49c); } .ds-sources li { display: grid; grid-template-columns: 2.5rem 1fr; align-items: center; gap: 0.75rem; } .ds-sources li::before { content: ''; border-top: 2px dashed var(--dash, #3b4277); } .ds-sources li.ds-live { color: var(--pearl, #fafafa); } .ds-sources li.ds-live::before { border-top: 3px solid var(--pearl, #fafafa); }"
+    },
+    {
+      "name": "Path",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Three stops on a solid pearl rule; the last stop filled yellow. The live line continued.",
+      "html": "<ol class=\"ds-path\"><li><h3>iPhone</h3><p>Graba el original completo.</p></li><li><h3>Red local</h3><p>Trozos de un segundo.</p></li><li><h3>Mac</h3><p>El original llega solo.</p></li></ol>",
+      "css": ".ds-path { list-style: none; margin: 0; padding: 1.5rem 1rem 1rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; background: var(--obsidian, #0a0e27); font: 400 1.0625rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-path li { position: relative; padding-top: 1.75rem; border-top: 3px solid var(--pearl, #fafafa); } .ds-path li::before { content: ''; position: absolute; top: -0.5rem; left: 0; width: 0.875rem; height: 0.875rem; border-radius: 50%; background: var(--obsidian, #0a0e27); border: 3px solid var(--pearl, #fafafa); box-sizing: border-box; } .ds-path li:last-child::before { background: var(--yellow, #eebc15); border-color: var(--yellow, #eebc15); } .ds-path h3 { margin: 0 0 0.35rem; font-size: 1.0625rem; font-weight: 680; color: var(--pearl, #fafafa); } .ds-path p { margin: 0; color: var(--stone, #d2d3cc); }"
+    },
+    {
+      "name": "Measured Table",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Hairline-ruled table; values in mono, an unmeasured value in muted sans.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Qué</th><th>Tamaño</th><th>Ritmo</th></tr></thead><tbody><tr><th>Vertical</th><td>2160 × 3840</td><td>30 fps</td></tr><tr><th>Vista en vivo</th><td class=\"ds-unmeasured\">no medido</td><td>30 fps</td></tr></tbody></table>",
+      "css": ".ds-table { border-collapse: collapse; width: 100%; max-width: 48rem; background: var(--obsidian, #0a0e27); color: var(--pearl, #fafafa); font: 400 1.0625rem/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; } .ds-table th, .ds-table td { text-align: left; padding: 0.85rem 1rem 0.85rem 0; border-bottom: 1px solid var(--rule, #1d2347); } .ds-table thead th { font-size: 0.8125rem; font-weight: 600; color: var(--muted, #a1a49c); border-bottom-color: var(--edge, #2f3561); } .ds-table tbody th { font-weight: 560; } .ds-table td { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-table td.ds-unmeasured { color: var(--muted, #a1a49c); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signal Diagram",
+    "overview": "The page is drawn the way the product works: sources are lines, the program is one vertical 9:16 frame, and every line says in its own stroke whether it is real today. A solid pearl line exists; a dashed indigo line is not built. Everything else on the page inherits that grammar, from the three-stop path below the fold to the dashed list of what is not built. The diagram is the proof; there is no footage, no photograph and no device mockup.\n\nIt is MADFAM's house world used plainly: an obsidian ground that never changes, pearl text, the logo's green for the one action and the logo's yellow for the point where things meet. The density is a technical sheet: hairline indigo rules between sections, measurements and commands set in monospace because they are measurements and code, and no decorative surface beyond the frame itself.\n\nThe page is built from markup, one stylesheet and inline SVG: no script, no inline style attribute, no web font, no image or video file, no third-party request (CSP `default-src 'none'`), and exactly one outbound link, to the public repository. Those are product constraints, and the visual system is shaped to live inside them.",
+    "keyCharacteristics": [
+      "One dark ground (obsidian) for the whole page; depth comes from three slightly lighter indigos, not from shadow.",
+      "Two stroke states carry meaning: solid pearl = exists, dashed indigo = not built.",
+      "Yellow marks convergence and live readouts; green is the action and nothing else.",
+      "System sans for words, system monospace with tabular figures for numbers and commands.",
+      "Drawn in CSS and inline SVG only; static unless motion explains the diagram."
+    ],
+    "rules": [
+      { "name": "The Live-or-Dashed Rule", "body": "A thing that exists is drawn as a solid pearl stroke; a thing that is not built is drawn as a dashed `dash` stroke. There is no third state, and nothing not built is ever drawn solid.", "section": "colors" },
+      { "name": "The One Green Rule", "body": "Green fills exactly one control per view: the primary action. Elsewhere it appears only as a link underline.", "section": "colors" },
+      { "name": "The Yellow Marks the Point Rule", "body": "Yellow is for where things meet and what is live (the convergence point, REC, the final stop, focus). It fills only small or momentary things (points, the REC dot, the focused skip link, selected text), never a panel or the action button.", "section": "colors" },
+      { "name": "The Measurement Is Mono Rule", "body": "Any resolution, rate, duration, timecode or command is set in the monospace with tabular numerals; prose around it stays in the sans. A value that was not measured is set back in the sans, in muted.", "section": "typography" },
+      { "name": "The No Web Font Rule", "body": "Type comes from the system stacks only. No font file is loaded.", "section": "typography" },
+      { "name": "The One Raised Object Rule", "body": "Only the program frame casts a shadow. Panels, code blocks and buttons are flat and are separated by tone and a 1px edge.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** draw anything that exists as a solid pearl stroke and anything not built as a 2px `dash` stroke with a 6/9 dash (The Live-or-Dashed Rule).",
+      "**Do** keep the whole page on obsidian and separate sections with a 1px `rule` hairline.",
+      "**Do** set every measured value, command and timecode in the system monospace with tabular numerals.",
+      "**Do** use the global focus ring: 2px yellow outline, 3px offset.",
+      "**Do** animate only to explain the diagram, on `cubic-bezier(0.16, 1, 0.3, 1)`, and remove it under `prefers-reduced-motion`.",
+      "**Do** keep the action (command plus green button) inside the first viewport at desktop sizes, and put it before the diagram below 62rem."
+    ],
+    "donts": [
+      "**Don't** load a web font, a script, an image or video file, or anything from a third party; don't use inline style attributes. Draw with CSS and inline SVG.",
+      "**Don't** fill anything but the one primary action with green.",
+      "**Don't** use yellow as a panel fill or for the action button.",
+      "**Don't** add shadows to anything other than the program frame.",
+      "**Don't** introduce colours outside this token set.",
+      "**Don't** draw a not-built source, feature or step in solid pearl, or set an unmeasured value in the monospace."
+    ]
+  }
+}
