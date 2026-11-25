@@ -10,7 +10,7 @@
 #
 # Read-proof, fail-closed: every lane prints what it checked and fails on an empty read.
 #
-# Not here: anything that needs a camera, a phone or a browser. The studio is checked for syntax only;
+# Not here: anything that needs a camera, a phone or a browser. The studio gets a syntax check and its unit tests;
 # a real take is a local check whose summary goes in the pull request (AGENTS.md).
 
 name: CI
@@ -58,7 +58,7 @@ jobs:
           echo "agent-docs: files=$n markers=8 OK"
 
   studio:
-    name: Studio syntax
+    name: Studio syntax and tests
     runs-on: ${{ (vars.ARC_BOOTSTRAP_COMPLETE == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) && 'madfam-runners-blue' || 'ubuntu-latest' }}
     timeout-minutes: 5
     steps:
@@ -72,12 +72,14 @@ jobs:
         run: |
           set -euo pipefail
           n=0
-          for f in studio/server.mjs studio/public/shared.js site/server/*.mjs site/server/test/*.mjs; do
+          for f in studio/*.mjs studio/test/*.mjs studio/public/shared.js site/server/*.mjs site/server/test/*.mjs; do
             node --check "$f"
             n=$((n + 1))
           done
           test "$n" -gt 0 || { echo "studio: read nothing (0 files)"; exit 1; }
           echo "studio: checked=$n OK"
+      - name: Studio unit tests
+        run: node --test studio/test/*.test.mjs
 
   landing:
     name: Landing server and deployment contract

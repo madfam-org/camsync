@@ -220,7 +220,25 @@ function startRecording() {
     if (rec.state === 'recording') rec.state = 'finishing';
     recorder = null;
     document.body.classList.remove('recording');
-    rec.queue.then(() => { if (rec.state === 'finishing') rec.state = 'saved'; });
+    rec.queue.then(async () => {
+      if (rec.state !== 'finishing') return;
+      // Every chunk is on the Mac: ask it to measure the take and keep what it found.
+      const settings = stream && stream.getVideoTracks()[0] ? stream.getVideoTracks()[0].getSettings() : {};
+      try {
+        const res = await fetch(signal.api('take-done', `&name=${rec.name}&ext=${rec.ext}`), {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            startedAt: rec.startedAt, stoppedAt: rec.stoppedAt, targetFps: Number(config.fps),
+            camera: { width: settings.width, height: settings.height, frameRate: settings.frameRate, mimeType: rec.mimeType },
+          }),
+        });
+        rec.measured = res.ok ? await res.json() : null;
+      } catch (e) {
+        rec.measured = null;
+      }
+      rec.state = 'saved';
+    });
   };
   mr.start(1000);
   recorder = mr;
@@ -295,6 +313,7 @@ async function reportStatus() {
     seconds: Math.round(((recording.stoppedAt || Date.now()) - recording.startedAt) / 1000),
     chunks: recording.chunks, recordedBytes: recording.recordedBytes, uploadedBytes: recording.uploadedBytes,
     error: recording.error,
+    warnings: recording.measured ? recording.measured.warnings : null,
   };
   const body = {
     started: Boolean(stream), config, settings, capabilities, devices,

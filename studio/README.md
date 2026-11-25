@@ -1,6 +1,6 @@
 # The studio
 
-> Last Updated: 2026-11-24
+> Last Updated: 2026-11-25
 
 The working part of camsync. An iPhone opens a web page that captures its camera; a control panel on
 a Mac shows a live view over the local network and controls the take; the iPhone records the
@@ -38,7 +38,7 @@ zoom are then controlled from the panel.
 | Path                                 | What                                                         | Committed?               |
 | ------------------------------------ | ------------------------------------------------------------ | ------------------------ |
 | `studio/certs/`                      | the phone key, a self-signed TLS key and certificate          | never (git-ignored)      |
-| `~/Movies/iPhone footage/` (default) | the masters (`.mp4`, H.264 + AAC)                             | outside the repository   |
+| `~/Movies/iPhone footage/<take>/` (default) | one folder per take: `master.mp4` (H.264 + AAC) and `take.json`, the measurements read from the file when the take ends (size, orientation, frame rate, sound level, warnings) | outside the repository   |
 
 The certificate is regenerated when the Mac's network address changes. Nothing is uploaded anywhere
 but this Mac: phone and viewer exchange video directly over WebRTC on the local network, and this
