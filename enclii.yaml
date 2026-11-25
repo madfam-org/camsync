@@ -4,8 +4,8 @@
 # 2026-11-25). The domain pins `port: 80` because the tunnel dials the Kubernetes Service (80), not the
 # container (8000); metadata.name IS the Kubernetes Service name.
 #
-# NOT DEPLOYED, and not deployable yet: the page has not been through the impeccable design process
-# (docs/DEPLOYMENT.md). Creating the host needs the owner's specific word.
+# LIVE since 2026-11-25: the page passed the impeccable design process and the owner gave his word to
+# create the host («Yes, create it»). Deploys stay dispatch-only (docs/DEPLOYMENT.md).
 #
 # Host convention (owner, 2026-11-24; host renamed 2026-11-25): camsync.madfam.io is the platform's landing; its other services
 # follow the established convention: one level under madfam.io, never nested, the short label, a

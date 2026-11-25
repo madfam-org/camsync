@@ -16,8 +16,8 @@ shape (16:9 or 4:3), lens and zoom are controlled from the Mac.
   app.
 - **Licence:** AGPL-3.0-only, ruled 2026-11-24.
 - **Repository:** public (ruled 2026-11-24), [`madfam-org/camsync`](https://github.com/madfam-org/camsync), created 2026-11-25.
-- **Landing:** `camsync.madfam.io`, in Spanish (`/`) and English (`/en`), not indexed. **The page has not
-  passed the impeccable design process and must not be deployed until it has.** Nothing is deployed.
+- **Landing:** `camsync.madfam.io`, in Spanish (`/`) and English (`/en`), not indexed. Live since
+  2026-11-25, after the impeccable design process; its system is [`DESIGN.md`](./DESIGN.md).
 - **The studio** runs on a Mac on a local network. It is not served from the internet.
 
 ## Studio

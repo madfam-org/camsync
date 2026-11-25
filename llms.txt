@@ -1,12 +1,12 @@
 # camsync
 
-Compact LLM context index for this repository. Last Updated: 2026-11-24.
+Compact LLM context index for this repository. Last Updated: 2026-11-25.
 
 camsync is a browser-based vertical-video capture and production studio, a tool for MADFAM's own
 production work: an iPhone opens a web page that captures its camera, sends a live view to a control
 panel on a Mac over the local network, and records the full-quality master, uploaded to the Mac in
 one-second chunks. The studio runs on a Mac on a local network and is never deployed. The repository
-also holds the landing for camsync.madfam.io, which is not deployed and has not passed the design process.
+also holds the landing for camsync.madfam.io: designed through the impeccable process and live, unindexed.
 
 ## Read first
 
@@ -14,7 +14,8 @@ also holds the landing for camsync.madfam.io, which is not deployed and has not 
 - `README.md` — human overview and status.
 - `PRODUCT.md` — known facts and questions open for the owner.
 - `docs/REPO_BOUNDARY.md` — what may and may not live in this public repository.
-- `docs/DEPLOYMENT.md` — the landing's deployment contract (not deployed).
+- `docs/DEPLOYMENT.md` — the landing's deployment contract (live since 2026-11-25).
+- `DESIGN.md` — the landing's design system, recorded from the build.
 
 ## Where things are
 

@@ -86,10 +86,9 @@ WCAG 2.2 AA for the landing. The page reads the same with scripts off (today it 
 
 ## Open, for the owner
 
-1. The landing's design: the impeccable process (shape, build, critique, polish) has not run. The
-   current page is plain markup with neutral styles and must not be deployed until it has.
+1. *(Settled 2026-11-25: the page passed the impeccable process and is live, unindexed.)*
 2. When, if ever, the page may be indexed (`INDEXABLE` stays `false` until then).
-3. Whether the landing links to the repository once it is published on GitHub (it links nowhere today).
+3. *(Settled 2026-11-25: the landing links to the public repository, its one outbound link.)*
 4. Whether the landing may name CEQ among the things not built, or should describe it without the name.
 5. Whether any still or footage may appear on the page, and from which take (none is cleared; any
    would need to show no real person and no private space).

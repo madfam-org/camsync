@@ -1,14 +1,14 @@
 # Deployment contract: the landing
 
-> Last Updated: 2026-11-24
+> Last Updated: 2026-11-25
 >
 > Boundary: Enclii-first. This file names the service, its ports, its host and the absence of secrets.
 > Operator gates and adapter-gap records live in MADFAM's private ops repository; this file keeps the
 > public-safe command sequence only.
 
-**State: not deployed, and not deployable yet.** The landing's page has not been through the impeccable
-design process (shape, build, critique, polish). It must not be deployed until it has. Nothing in the
-[onboarding sequence](#onboarding-sequence) has been run.
+**State: live since 2026-11-25, unindexed.** The page passed the impeccable design process (shape,
+build, critique, polish) and the owner gave his word to create the host («Yes, create it»). The
+[onboarding sequence](#onboarding-sequence) below was run that day; each step says what it returned.
 
 Only the landing could be deployed from this repository. The studio (`studio/`) runs on a Mac on a
 local network; it is never built into an image and is not served from the internet (owner ruling,
@@ -55,8 +55,8 @@ languages, the strings, the assets, and the revision). `/metrics` listens only o
 9090 (Service `camsync-landing-metrics`), never routed; on 8000 it is 404. In production any other host
 gets 421, and every response carries HSTS. http→https is the edge's redirect, not this server's.
 Stateless: **no database, no bucket, no Janua client, no secret, no cookie, no analytics, no script,
-no outbound call**. The content security policy names no other origin. The page links nowhere outside
-itself (the repository is not published yet).
+no outbound call**. The content security policy names no other origin. The page has one outbound link,
+to this public repository.
 
 ## Runtime
 
@@ -114,11 +114,11 @@ curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: camsync.madfam.io' http://127
 curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: other.example' http://127.0.0.1:18780/
 ```
 
-Expect 200 and 421. (Not run: no image has been built.)
+Expect 200 and 421. (Not run locally: the first image was built by the Landing workflow.)
 
 ## Onboarding sequence
 
-**NOT RUN. None of these commands has been executed.** Preconditions, in order:
+**Run on 2026-11-25.** Kept as the sequence for a rebuild or a second environment. Preconditions, in order:
 
 1. The page has passed the impeccable design process.
 2. The owner has given his specific word to create the GitHub repository `madfam-org/camsync`, the
@@ -129,9 +129,9 @@ Run from a machine with an Enclii login (`enclii login`) and the GitHub CLI. Eac
 dry run. Nothing here takes a secret value, and nothing here creates a Janua client: the landing has no
 sign-in.
 
-1. **Merge** the landing pull request into `main` (CI green). NOT RUN.
+1. **Merge** the landing pull request into `main` (CI green). Done: #3.
 2. **Build** (replaces the all-zero placeholder digest with the signed image digest, committed to
-   `main`). NOT RUN:
+   `main`). Done: the first pin was committed by the workflow:
 
    ```bash
    gh workflow run landing.yml -R madfam-org/camsync --ref main
@@ -139,7 +139,8 @@ sign-in.
 
 3. **Onboard** (project, service, namespace `camsync`, GitOps application; no database, bucket or
    secret). A first run can report `PARTIAL` until pods serve; `onboard ensure` then registers the
-   domain. NOT RUN:
+   domain. Done. `enclii onboard` exited 1 and printed its usage although it had onboarded; read the
+   top of its output, then run `onboard ensure`:
 
    ```bash
    enclii onboard --repo madfam-org/camsync --project camsync --manifest-path infra/k8s/production --skip-postgres --skip-r2 --skip-secrets --dry-run
@@ -151,20 +152,25 @@ sign-in.
 
 4. **Domain** (proxied DNS and TLS for the one host declared in `enclii.yaml`; needs the owner's
    specific word). Run the dry run, then `--apply`, until `stillMissing` is empty; a pass can end
-   `partial` more than once, so wait and re-run before planning the tunnel. NOT RUN:
+   `partial` more than once, so wait and re-run before planning the tunnel. Done. On 2026-11-25 every
+   pass said `created=1` yet `stillMissing=[camsync.madfam.io]` until the service row was given its
+   namespace with `enclii projects reconcile-services camsync` (it reported `updated_namespace`); the
+   next pass registered the host:
 
    ```bash
    enclii ops domains reconcile camsync-landing
    ```
 
 5. **Tunnel route** (to the Service `camsync-landing`, port 80). The plan is empty until the domain
-   reconcile returns `stillMissing=[]`. NOT RUN:
+   reconcile returns `stillMissing=[]`. Done: dry run first, then `--apply --expect-plan <plan id>`
+   with a reason:
 
    ```bash
    enclii providers cloudflare tunnels-apply --project camsync
    ```
 
-6. **Probe** from outside. NOT RUN:
+6. **Probe** from outside. Done: `/health` reports `"status":"ok"` and the revision; `/` and `/en`
+   200 with the content security policy, HSTS and `x-robots-tag: noindex, nofollow`; `/metrics` 404:
 
    ```bash
    curl -s https://camsync.madfam.io/health
