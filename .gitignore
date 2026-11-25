@@ -1,0 +1,58 @@
+# Dependencies (there are none; kept so a stray install is never committed)
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+test-results/
+*.tap
+
+# The studio's run-time files: a self-signed TLS key and certificate and the phone's access key.
+# Generated on first run, never committed (docs/REPO_BOUNDARY.md).
+certs/
+studio/certs/
+
+# Recordings, masters and event logs are never committed (docs/REPO_BOUNDARY.md)
+recordings/
+artifacts/
+exports/
+captures/
+*.mp4
+*.webm
+*.mov
+*.m4v
+*.avi
+*.ndjson
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.*
+
+# IDE
+.vscode/*
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Package manager locks: there are no dependencies, so there is no lockfile
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

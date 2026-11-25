@@ -1,0 +1,98 @@
+# CI for camsync (PUBLIC repository, owner ruling 2026-11-24).
+#
+# Runner selection, identical on every job: the organisation's self-hosted pool only when it is
+# bootstrapped AND the run is not a pull request from a fork. A fork pull request always runs on
+# GitHub-hosted runners, whatever the repository variable says, so outside code never reaches the
+# self-hosted pool.
+#
+# Supply chain: every action is pinned to a full commit SHA (tag in the comment), nothing is installed
+# (the repository has no dependencies), top-level permissions are read-only, no job receives a secret.
+#
+# Read-proof, fail-closed: every lane prints what it checked and fails on an empty read.
+#
+# Not here: anything that needs a camera, a phone or a browser. The studio is checked for syntax only;
+# a real take is a local check whose summary goes in the pull request (AGENTS.md).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  agent-docs:
+    name: Agent docs and boundary markers
+    runs-on: ${{ (vars.ARC_BOOTSTRAP_COMPLETE == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) && 'madfam-runners-blue' || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Required files and markers
+        run: |
+          set -euo pipefail
+          n=0
+          for f in AGENTS.md CLAUDE.md llms.txt LICENSE NOTICE PRODUCT.md docs/REPO_BOUNDARY.md docs/DEPLOYMENT.md package.json; do
+            test -s "$f" || { echo "missing or empty $f"; exit 1; }
+            n=$((n + 1))
+          done
+          grep -q '<!-- MADFAM-AGENTS-CANONICAL v1 -->' AGENTS.md
+          head -c 2000 AGENTS.md | grep -Eq '^>[[:space:]]*Last Updated:[[:space:]]*[0-9]{4}-[0-9]{2}-[0-9]{2}[[:space:]]*$'
+          grep -q 'docs/REPO_BOUNDARY.md' AGENTS.md
+          grep -qi 'canonical agent instructions' CLAUDE.md
+          grep -q 'AGENTS.md' CLAUDE.md
+          grep -q 'GNU AFFERO GENERAL PUBLIC LICENSE' LICENSE
+          grep -q '"license": "AGPL-3.0-only"' package.json
+          if git ls-files | grep -E '(^|/)certs/|\.(pem|key|mp4|webm|mov)$'; then
+            echo "a certificate, key or recording is tracked (docs/REPO_BOUNDARY.md)"; exit 1
+          fi
+          echo "agent-docs: files=$n markers=8 OK"
+
+  studio:
+    name: Studio syntax
+    runs-on: ${{ (vars.ARC_BOOTSTRAP_COMPLETE == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) && 'madfam-runners-blue' || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: node --check on every studio and server module
+        run: |
+          set -euo pipefail
+          n=0
+          for f in studio/server.mjs studio/public/shared.js site/server/*.mjs site/server/test/*.mjs; do
+            node --check "$f"
+            n=$((n + 1))
+          done
+          test "$n" -gt 0 || { echo "studio: read nothing (0 files)"; exit 1; }
+          echo "studio: checked=$n OK"
+
+  landing:
+    name: Landing server and deployment contract
+    runs-on: ${{ (vars.ARC_BOOTSTRAP_COMPLETE == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) && 'madfam-runners-blue' || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - name: Hosts, headers, both languages, no third-party request, deploy files
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap site/server/test/*.test.mjs | tee landing-tests.tap
+          grep -Eq '^# pass [1-9]' landing-tests.tap || { echo "landing: read nothing (0 tests)"; exit 1; }
+          grep -q '^# fail 0$' landing-tests.tap

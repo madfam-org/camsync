@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+  NOT DESIGNED. This page has not been through the impeccable design process (shape, build,
+  critique, polish) and must not be deployed until it has. Plain, semantic markup on purpose.
+-->
+<html lang="{{v:lang}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{t:meta.title}}</title>
+    <meta name="description" content="{{t:meta.description}}" />
+    {{h:robots}}
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="es" href="/" />
+    <link rel="alternate" hreflang="en" href="/en" />
+    <link rel="stylesheet" href="/landing.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{{t:skip}}</a>
+
+    <header class="top">
+      <a class="name" href="{{v:home}}">camsync</a>
+      <a href="{{v:otherHome}}" hreflang="{{v:other}}" lang="{{v:other}}">{{t:nav.other}}</a>
+    </header>
+
+    <main id="main">
+      <section aria-labelledby="intro-title">
+        <h1 id="intro-title">{{t:intro.title}}</h1>
+        <p class="lede">{{t:intro.lede}}</p>
+        <p>{{t:intro.status}}</p>
+      </section>
+
+      <section aria-labelledby="today-title">
+        <h2 id="today-title">{{t:today.title}}</h2>
+        <ul>
+          <li>{{t:today.live}}</li>
+          <li>{{t:today.master}}</li>
+          <li>{{t:today.control}}</li>
+          <li>{{t:today.local}}</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="measured-title">
+        <h2 id="measured-title">{{t:measured.title}}</h2>
+        <p>{{t:measured.intro}}</p>
+        <table>
+          <caption>
+            {{t:measured.caption}}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{t:measured.col.what}}</th>
+              <th scope="col">{{t:measured.col.size}}</th>
+              <th scope="col">{{t:measured.col.rate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">{{t:measured.vertical}}</th>
+              <td>2160 × 3840</td>
+              <td>{{t:measured.vertical.rate}}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{t:measured.sensor}}</th>
+              <td>2160 × 2880</td>
+              <td>{{t:measured.sensor.rate}}</td>
+            </tr>
+            <tr>
+              <th scope="row">{{t:measured.live}}</th>
+              <td>{{t:measured.live.size}}</td>
+              <td>{{t:measured.live.rate}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>{{t:measured.format}}</p>
+        <p>{{t:measured.remote}}</p>
+        <p>{{t:measured.limit}}</p>
+      </section>
+
+      <section aria-labelledby="missing-title">
+        <h2 id="missing-title">{{t:notyet.title}}</h2>
+        <p>{{t:notyet.intro}}</p>
+        <ul>
+          <li>{{t:notyet.titles}}</li>
+          <li>{{t:notyet.log}}</li>
+          <li>{{t:notyet.multi}}</li>
+          <li>{{t:notyet.render}}</li>
+          <li>{{t:notyet.app}}</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="use-title">
+        <h2 id="use-title">{{t:use.title}}</h2>
+        <ol>
+          <li>{{t:use.1}}</li>
+          <li>{{t:use.2}} <code>node studio/server.mjs</code></li>
+          <li>{{t:use.3}}</li>
+          <li>{{t:use.4}}</li>
+        </ol>
+        <p>{{t:use.cert}}</p>
+        <p>{{t:use.source}}</p>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>camsync · Innovaciones MADFAM S.A.S. de C.V.</p>
+      <p>{{t:foot.licence}}</p>
+      <p>{{t:foot.quiet}}</p>
+    </footer>
+  </body>
+</html>

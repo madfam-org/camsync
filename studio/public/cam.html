@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>phonecam</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; color: #fff; overflow: hidden;
+               font: 14px/1.35 -apple-system, system-ui, sans-serif; -webkit-user-select: none; user-select: none; }
+  video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  #start { position: fixed; inset: 0; display: flex; flex-direction: column; gap: 14px; align-items: center;
+           justify-content: center; background: #000; padding: 24px; text-align: center; }
+  #start button { font: 600 20px -apple-system, system-ui, sans-serif; padding: 16px 28px; border-radius: 14px;
+                  border: 0; background: #2fd3a6; color: #04241c; }
+  #start p { margin: 0; color: #9aa; max-width: 30em; }
+  #hud { position: fixed; left: 0; right: 0; top: 0; padding: calc(env(safe-area-inset-top) + 6px) 12px 6px;
+         background: linear-gradient(#000a, #0000); display: flex; gap: 10px; align-items: center;
+         font-variant-numeric: tabular-nums; }
+  #rec { display: none; align-items: center; gap: 6px; font-weight: 700; color: #ff5b5b; }
+  #rec::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; }
+  body.recording #rec { display: flex; }
+  #info { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #error { position: fixed; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom) + 12px);
+           color: #ffb4b4; white-space: pre-wrap; }
+  body.started #start { display: none; }
+</style>
+</head>
+<body>
+<video id="preview" autoplay playsinline muted></video>
+<div id="hud"><span id="rec">REC</span><span id="info"></span></div>
+<div id="error"></div>
+<div id="start">
+  <button id="startButton" type="button">Start camera</button>
+  <p>Keep this page open and in front. Everything else is controlled from the Mac.</p>
+</div>
+<script type="module">
+const KEY = location.pathname.split('/')[2] || '';
+const { makeSignal, waitForIce } = await import(`${location.pathname}/shared.js`);
+const signal = makeSignal({ key: KEY, role: 'phone', name: 'iphone' });
+
+const preview = document.getElementById('preview');
+const info = document.getElementById('info');
+const errorBox = document.getElementById('error');
+
+const config = {
+  height: 2160,        // capture height in landscape terms: 2160, 1080 or 720
+  aspect: '16:9',      // '16:9' or '4:3'
+  fps: 30,
+  deviceId: '',        // '' means the default back camera
+  previewMbps: 8,
+  previewLongSide: 1920,  // the live view is scaled down so its longer side is at most this many pixels
+  masterMbps: 30,
+};
+const MASTER_TYPES = ['video/mp4', 'video/mp4;codecs=avc1', 'video/mp4;codecs=hvc1', 'video/webm'];
+
+let stream = null;
+let devices = [];
+let wakeLock = null;
+let recorder = null;
+let recording = null;      // details of the current or most recent master recording
+let lastError = '';
+const peers = new Map();   // viewer id -> { pc, lastBytes, lastAt, stats }
+
+function fail(where, e) {
+  lastError = `${where}: ${e && e.message ? e.message : e}`;
+  errorBox.textContent = lastError;
+  console.error(where, e);
+}
+
+function videoConstraints() {
+  const height = Number(config.height);
+  const width = Math.round(height * (config.aspect === '4:3' ? 4 / 3 : 16 / 9));
+  const video = { width: { ideal: width }, height: { ideal: height }, frameRate: { ideal: Number(config.fps) } };
+  if (config.deviceId) video.deviceId = { exact: config.deviceId };
+  else video.facingMode = { ideal: 'environment' };
+  return video;
+}
+
+async function openCamera() {
+  if (recorder) throw new Error('stop the recording before changing the camera');
+  const next = await navigator.mediaDevices.getUserMedia({
+    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+    video: videoConstraints(),
+  });
+  const previous = stream;
+  stream = next;
+  preview.srcObject = stream;
+  for (const { pc } of peers.values()) {
+    for (const sender of pc.getSenders()) {
+      const kind = sender.track && sender.track.kind;
+      const replacement = kind === 'video' ? stream.getVideoTracks()[0] : kind === 'audio' ? stream.getAudioTracks()[0] : null;
+      if (replacement) await sender.replaceTrack(replacement);
+    }
+    await applyPreviewBitrate(pc).catch(() => {});  // a viewer that is still connecting gets it on connect
+  }
+  if (previous) previous.getTracks().forEach((t) => t.stop());
+  devices = (await navigator.mediaDevices.enumerateDevices())
+    .filter((d) => d.kind === 'videoinput')
+    .map((d) => ({ deviceId: d.deviceId, label: d.label }));
+}
+
+async function keepAwake() {
+  try {
+    if ('wakeLock' in navigator && document.visibilityState === 'visible') {
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (e) {
+    wakeLock = null;
+  }
+}
+
+// ---------- live preview to viewers ----------
+
+async function applyPreviewBitrate(pc) {
+  const sender = pc.getSenders().find((s) => s.track && s.track.kind === 'video');
+  if (!sender) return;
+  const params = sender.getParameters();
+  if (!params.encodings || !params.encodings.length) params.encodings = [{}];
+  // The master recording needs the phone's encoder more than the live view does, so the live view
+  // is sent smaller than the camera frame and gives up sharpness before it gives up frame rate.
+  const frame = sender.track.getSettings();
+  const longSide = Math.max(frame.width || 0, frame.height || 0);
+  params.encodings[0].maxBitrate = Number(config.previewMbps) * 1e6;
+  params.encodings[0].scaleResolutionDownBy = Math.max(1, longSide / Number(config.previewLongSide));
+  params.degradationPreference = 'maintain-framerate';
+  await sender.setParameters(params);
+}
+
+function preferH264(pc) {
+  try {
+    const transceiver = pc.getTransceivers().find((t) => t.sender.track && t.sender.track.kind === 'video');
+    const codecs = RTCRtpSender.getCapabilities('video').codecs;
+    const h264 = codecs.filter((c) => /h264/i.test(c.mimeType));
+    if (transceiver && h264.length) {
+      transceiver.setCodecPreferences([...h264, ...codecs.filter((c) => !/h264/i.test(c.mimeType))]);
+    }
+  } catch (e) {
+    // Not fatal: the browsers fall back to whatever codec they share.
+  }
+}
+
+async function connectViewer(viewerId) {
+  if (!stream) return;
+  const existing = peers.get(viewerId);
+  if (existing) existing.pc.close();
+  const pc = new RTCPeerConnection();
+  peers.set(viewerId, { pc, lastBytes: 0, lastAt: 0, stats: null });
+  stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+  preferH264(pc);
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState === 'connected') applyPreviewBitrate(pc).catch((e) => fail('bitrate', e));
+    if (pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+      if (peers.get(viewerId) && peers.get(viewerId).pc === pc) peers.delete(viewerId);
+    }
+  };
+  await pc.setLocalDescription(await pc.createOffer());
+  await waitForIce(pc);
+  await signal.send(viewerId, 'offer', { sdp: pc.localDescription.sdp });
+}
+
+async function onAnswer(msg) {
+  const peer = peers.get(msg.from);
+  if (peer && peer.pc.signalingState === 'have-local-offer') {
+    await peer.pc.setRemoteDescription({ type: 'answer', sdp: msg.data.sdp });
+  }
+}
+
+// ---------- master recording, streamed to the Mac in one-second pieces ----------
+
+function timestampName() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, '0');
+  return `iphone-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+async function uploadChunk(rec, seq, blob) {
+  const url = signal.api('upload', `&name=${rec.name}&seq=${seq}&ext=${rec.ext}`);
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      const res = await fetch(url, { method: 'POST', body: blob });
+      if (!res.ok) throw new Error(`upload ${seq} failed: ${res.status}`);
+      rec.uploadedBytes += blob.size;
+      return;
+    } catch (e) {
+      if (attempt >= 5) throw e;
+      await new Promise((r) => setTimeout(r, 500 * attempt));
+    }
+  }
+}
+
+function startRecording() {
+  if (recorder || !stream) return;
+  const mimeType = ['video/mp4', 'video/webm'].find((t) => MediaRecorder.isTypeSupported(t)) || '';
+  const rec = {
+    name: timestampName(), mimeType, ext: mimeType.includes('webm') ? 'webm' : 'mp4',
+    state: 'recording', startedAt: Date.now(), stoppedAt: 0,
+    chunks: 0, recordedBytes: 0, uploadedBytes: 0, error: '',
+    queue: Promise.resolve(),
+  };
+  const mr = new MediaRecorder(stream, {
+    mimeType: mimeType || undefined,
+    videoBitsPerSecond: Number(config.masterMbps) * 1e6,
+    audioBitsPerSecond: 192000,
+  });
+  mr.ondataavailable = (e) => {
+    if (!e.data || !e.data.size) return;
+    const seq = rec.chunks;
+    rec.chunks += 1;
+    rec.recordedBytes += e.data.size;
+    rec.queue = rec.queue.then(() => uploadChunk(rec, seq, e.data)).catch((err) => {
+      rec.error = String(err.message || err);
+      rec.state = 'failed';
+      fail('upload', err);
+    });
+  };
+  mr.onerror = (e) => fail('recorder', e.error || e);
+  mr.onstop = () => {
+    rec.stoppedAt = Date.now();
+    if (rec.state === 'recording') rec.state = 'finishing';
+    recorder = null;
+    document.body.classList.remove('recording');
+    rec.queue.then(() => { if (rec.state === 'finishing') rec.state = 'saved'; });
+  };
+  mr.start(1000);
+  recorder = mr;
+  recording = rec;
+  document.body.classList.add('recording');
+}
+
+function stopRecording() {
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+}
+
+// ---------- commands from the Mac ----------
+
+async function onCommand(data) {
+  if (data.action === 'rec-start') return startRecording();
+  if (data.action === 'rec-stop') return stopRecording();
+  if (data.action === 'reload') {
+    if (recorder) throw new Error('stop the recording before reloading');
+    return location.reload();
+  }
+  if (data.action !== 'set') return;
+  if (data.key === 'zoom') {
+    const track = stream && stream.getVideoTracks()[0];
+    if (track) await track.applyConstraints({ advanced: [{ zoom: Number(data.value) }] });
+    return;
+  }
+  if (!(data.key in config)) return;
+  config[data.key] = data.value;
+  if (data.key === 'previewMbps' || data.key === 'previewLongSide') {
+    for (const { pc } of peers.values()) await applyPreviewBitrate(pc);
+  } else if (data.key !== 'masterMbps') {
+    await openCamera();
+  }
+}
+
+// ---------- status reports to the Mac ----------
+
+async function peerReports() {
+  const out = [];
+  for (const [viewerId, peer] of peers) {
+    const report = { viewerId, state: peer.pc.connectionState };
+    try {
+      const stats = await peer.pc.getStats();
+      const codecs = new Map();
+      stats.forEach((s) => { if (s.type === 'codec') codecs.set(s.id, s.mimeType); });
+      stats.forEach((s) => {
+        if (s.type !== 'outbound-rtp' || s.kind !== 'video') return;
+        const now = s.timestamp;
+        if (peer.lastAt) report.kbps = Math.round(((s.bytesSent - peer.lastBytes) * 8) / (now - peer.lastAt));
+        peer.lastBytes = s.bytesSent;
+        peer.lastAt = now;
+        report.width = s.frameWidth;
+        report.height = s.frameHeight;
+        report.fps = s.framesPerSecond;
+        report.limitedBy = s.qualityLimitationReason;
+        report.codec = codecs.get(s.codecId) || '';
+      });
+    } catch (e) {
+      report.error = String(e.message || e);
+    }
+    out.push(report);
+  }
+  return out;
+}
+
+async function reportStatus() {
+  const track = stream && stream.getVideoTracks()[0];
+  const settings = track ? track.getSettings() : null;
+  const capabilities = track && track.getCapabilities ? track.getCapabilities() : null;
+  const rec = recording && {
+    name: recording.name, ext: recording.ext, mimeType: recording.mimeType, state: recording.state,
+    seconds: Math.round(((recording.stoppedAt || Date.now()) - recording.startedAt) / 1000),
+    chunks: recording.chunks, recordedBytes: recording.recordedBytes, uploadedBytes: recording.uploadedBytes,
+    error: recording.error,
+  };
+  const body = {
+    started: Boolean(stream), config, settings, capabilities, devices,
+    orientation: (screen.orientation && screen.orientation.type) || '',
+    visible: document.visibilityState === 'visible',
+    wakeLock: Boolean(wakeLock && !wakeLock.released),
+    peers: await peerReports(), recording: rec, error: lastError,
+    masterTypes: MASTER_TYPES.filter((t) => MediaRecorder.isTypeSupported(t)),
+    userAgent: navigator.userAgent,
+  };
+  if (settings) {
+    info.textContent = `${settings.width}×${settings.height} @ ${Math.round(settings.frameRate || 0)} · ${peers.size} viewer${peers.size === 1 ? '' : 's'}`;
+  }
+  await fetch(signal.api('status'), {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+  });
+}
+
+// ---------- start ----------
+
+async function start() {
+  await openCamera();
+  document.body.classList.add('started');
+  sessionStorage.setItem('phonecam-started', '1');
+  errorBox.textContent = lastError = '';
+  await keepAwake();
+  await signal.send('viewer', 'phone-ready');
+}
+
+document.getElementById('startButton').addEventListener('click', () => start().catch((e) => fail('camera', e)));
+
+// After a reload asked for from the Mac, try to resume without a tap. Safari may still insist on
+// one, in which case the Start button stays on screen.
+if (sessionStorage.getItem('phonecam-started')) start().catch(() => {});
+
+document.addEventListener('visibilitychange', keepAwake);
+
+signal.listen(async (msg) => {
+  try {
+    if (msg.type === 'hello') await connectViewer(msg.from);
+    else if (msg.type === 'answer') await onAnswer(msg);
+    else if (msg.type === 'cmd') await onCommand(msg.data || {});
+  } catch (e) {
+    fail(msg.type, e);
+  }
+});
+
+setInterval(() => reportStatus().catch(() => {}), 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+# Enclii manifest: the camsync landing.
+#
+# One project, ONE service, one image: a stateless landing at obs.madfam.io (owner direction,
+# 2026-11-24). The domain pins `port: 80` because the tunnel dials the Kubernetes Service (80), not the
+# container (8000); metadata.name IS the Kubernetes Service name.
+#
+# NOT DEPLOYED, and not deployable yet: the page has not been through the impeccable design process
+# (docs/DEPLOYMENT.md). Creating the host needs the owner's specific word.
+#
+# Host convention (owner, 2026-11-24): obs.madfam.io is the platform's landing; its other services
+# follow the established convention: one level under madfam.io, never nested, the short label, a
+# hyphen and the surface:
+#   obs-app.madfam.io    the studio, if it is ever served from the internet
+#   obs-api.madfam.io    an interface
+#   obs-ws.madfam.io     live signalling, if it needs its own host
+#   obs-admin.madfam.io  an operator view
+# NONE of these is declared: only obs.madfam.io is. A host is declared here only when a runtime
+# exists for it, and each one needs the owner's word. `obs` is only a host label, never a name.
+#
+# The studio (studio/) is not deployed by this file: it runs on a Mac on a local network and is not
+# served from the internet for now (owner ruling, 2026-11-24).
+#
+# Stateless: no database, no bucket, no Janua client, no secrets, no analytics. Builds:
+# .github/workflows/landing.yml (Enclii's reusable build-publish, pinned by full SHA), dispatch-only.
+# autoDeploy stays false: a merge never deploys by itself (docs/DEPLOYMENT.md).
+apiVersion: enclii.dev/v1
+kind: Project
+metadata:
+  name: camsync
+spec:
+  promotion:
+    pattern: manual
+    min_soak_minutes: 15
+    require_smoke_pass: true
+---
+apiVersion: enclii.dev/v1
+kind: Service
+metadata:
+  name: camsync-landing
+  project: camsync
+  description: camsync; the stateless landing, in Spanish and English
+spec:
+  domains:
+    - name: obs.madfam.io
+      environment: production
+      port: 80
+
+  # Off until the owner says to index: a status-page entry is a public mention of the host. The entry
+  # is written out so that turning it on is one word (docs/DEPLOYMENT.md).
+  status:
+    enabled: false
+    entries:
+      - name: camsync-landing
+        url: https://obs.madfam.io/health
+        href: https://obs.madfam.io
+        group: camsync
+        family: MADFAM Platform
+        description: Landing (no sign-in, not indexed)
+        assertContains: '"status":"ok"'
+        assertNotContains: 'localhost:'
+
+  build:
+    type: dockerfile
+    dockerfile: site/Dockerfile
+    context: .
+    source:
+      git:
+        repository: https://github.com/madfam-org/camsync
+        branch: main
+        autoDeploy: false
+
+  runtime:
+    port: 8000
+    replicas: 2
+    resources:
+      requests:
+        cpu: '25m'
+        memory: '64Mi'
+      limits:
+        cpu: '250m'
+        memory: '192Mi'
+    healthCheck: /health
+    healthCheckTimeoutSeconds: 3
+
+  slo:
+    availability: 99.5
+    latencyP99Ms: 1000
+
+  network:
+    services:
+      - name: camsync-landing
+        label: app.kubernetes.io/name
+        port: 8000
+        ingress: [cloudflare-tunnel]
+        egress: [dns]
+
+  dependencies:
+    - platform: enclii
+      reason: deploy, domain (obs.madfam.io), status

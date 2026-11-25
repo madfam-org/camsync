@@ -1,0 +1,31 @@
+# camsync
+
+Compact LLM context index for this repository. Last Updated: 2026-11-24.
+
+camsync is a browser-based vertical-video capture and production studio, a tool for MADFAM's own
+production work: an iPhone opens a web page that captures its camera, sends a live view to a control
+panel on a Mac over the local network, and records the full-quality master, uploaded to the Mac in
+one-second chunks. The studio runs on a Mac on a local network and is never deployed. The repository
+also holds the landing for obs.madfam.io, which is not deployed and has not passed the design process.
+
+## Read first
+
+- `AGENTS.md` — canonical agent operating instructions.
+- `README.md` — human overview and status.
+- `PRODUCT.md` — known facts and questions open for the owner.
+- `docs/REPO_BOUNDARY.md` — what may and may not live in this public repository.
+- `docs/DEPLOYMENT.md` — the landing's deployment contract (not deployed).
+
+## Where things are
+
+- `studio/server.mjs` — local relay: signalling (HTTP long-poll), phone status, chunked master upload.
+- `studio/public/` — `cam.html` (phone), `control.html` (Mac panel), `view.html` (live view), `shared.js`.
+- `site/server/` — the landing's dependency-free Node server and its tests.
+- `site/web/` — the landing's template, dictionary (es, en), 404, styles, icon.
+- `infra/k8s/production/`, `enclii.yaml`, `.github/workflows/landing.yml` — the landing's deployment.
+
+## Production operations
+
+Routine production operations are Enclii-first. Use Enclii web, API, or CLI
+before raw infrastructure tools. Direct `kubectl`, `helm`, SSH, provider CLIs,
+`docker exec`, or direct container access is bootstrap/break-glass only.
