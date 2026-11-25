@@ -57,8 +57,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# design-process working material (comps, mocks, captures)
+# design-process working material (comps, mocks, captures, question state; never shipped)
 .impeccable/mocks/
 .impeccable/review/
 .impeccable/build/
 .impeccable/reference/
+.impeccable/questions/
