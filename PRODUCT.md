@@ -1,10 +1,10 @@
 # Product
 
-> Last Updated: 2026-11-24
+> Last Updated: 2026-11-25
 >
 > Known facts and owner rulings only. This is the input to the impeccable design process, not its
-> output: nothing about the landing's look, voice or structure is decided here, and there is no
-> `DESIGN.md` until that process writes one. See [Open, for the owner](#open-for-the-owner).
+> output: nothing about the landing's look, voice or structure is decided here; the process wrote
+> [`DESIGN.md`](./DESIGN.md) from the build. See [Open, for the owner](#open-for-the-owner).
 
 <!-- impeccable:product-schema 1 -->
 
@@ -55,6 +55,12 @@ Not built: titles and overlays, an event log, multi-camera, rendering through th
 native app. The landing must say each of those limits and must not imply anything beyond the list
 above.
 
+Ruled, not built, and not on the page: segmentation. The live mask comes from the phone, the Mac
+only shows it, and the final mask is made on MADFAM's servers from the master and the operator's
+prompts, which are written to the event log. Only models whose code and weights are compatible with
+AGPL-3.0-only are used; SAM 3 is never shipped in camsync and may come later only as a plug-in the
+user installs under Meta's own terms. Adding it to the page goes through the impeccable process.
+
 Constraints: no prices, no client names, no people's names, no invented metrics, no recordings of real
 people or private spaces in the repository or on the page.
 
@@ -65,7 +71,8 @@ research and the names already set aside are in [`docs/NAMING.md`](./docs/NAMING
 `camsync.madfam.io` (owner direction, 2026-11-25; it replaces `obs.madfam.io`, which was never
 created). Positioning: [`docs/POSITIONING.md`](./docs/POSITIONING.md). No third-party product is named in the landing's copy. Licence AGPL-3.0-only, holder
 Innovaciones MADFAM S.A.S. de C.V.; repository public (owner rulings, 2026-11-24). Spanish is served at
-`/` and English at `/en`; the page is not indexed until the owner says. No visual identity exists.
+`/` and English at `/en`; the page is not indexed until the owner says. The landing's visual system
+is [`DESIGN.md`](./DESIGN.md), made for the codename; no brand identity exists.
 
 ## Evidence on Hand
 
@@ -92,7 +99,7 @@ WCAG 2.2 AA for the landing. The page reads the same with scripts off (today it 
 4. Whether the landing may name CEQ among the things not built, or should describe it without the name.
 5. Whether any still or footage may appear on the page, and from which take (none is cleared; any
    would need to show no real person and no private space).
-6. Creating the GitHub repository `madfam-org/camsync`, the Enclii project `camsync` and the host
-   `camsync.madfam.io`: each needs the owner's specific word (docs/DEPLOYMENT.md).
+6. *(Settled 2026-11-25: the repository, the Enclii project and the host were created on the owner's
+   word; see docs/DEPLOYMENT.md.)*
 7. Renaming the studio's prototype-era environment variables and page titles to camsync (a behaviour
    change, left out of the move on purpose).

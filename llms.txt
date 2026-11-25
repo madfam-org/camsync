@@ -7,6 +7,8 @@ production work: an iPhone opens a web page that captures its camera, sends a li
 panel on a Mac over the local network, and records the full-quality master, uploaded to the Mac in
 one-second chunks. The studio runs on a Mac on a local network and is never deployed. The repository
 also holds the landing for camsync.madfam.io: designed through the impeccable process and live, unindexed.
+Segmentation is ruled (live mask on the phone, final mask on the servers, licence-clean models only, no
+SAM 3 shipped) and not built; see AGENTS.md.
 
 ## Read first
 

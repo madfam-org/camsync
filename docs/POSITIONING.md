@@ -28,6 +28,10 @@ video, while each camera keeps its own full-quality recording.**
 3. **Finished on MADFAM's servers.** The render, captions, sound and every social format are produced
    by MADFAM's own production platform, not on the operator's computer.
 4. **Part of the ecosystem.** Integrations with MADFAM's other platforms, where they help.
+5. **Masks near real time** (owner direction 2026-11-24, ruled 2026-11-25). A person or object is
+   cut out live on the phone and seen on the computer; the finished mask is made on the servers from
+   the original and the operator's choices, so it can be made again later with a better model. Only
+   models whose licences fit camsync's own are used.
 
 ## Who it is for first
 
