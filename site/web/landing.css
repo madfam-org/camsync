@@ -1,128 +1,659 @@
 /*
- * NOT DESIGNED. Minimal, neutral styles so the page reads well until it goes through the impeccable
- * design process (shape, build, critique, polish). System fonts only, no images, nothing external.
+ * camsync landing. MADFAM's house world (obsidian, pearl, logo green and yellow; system type),
+ * composed as the product's own diagram: sources converging on one vertical frame.
+ * No web font, no image file, no script: the page is HTML, this sheet and inline SVG.
  */
-:root {
-  color-scheme: light dark;
-  --text: #1a1a1a;
-  --muted: #555555;
-  --bg: #ffffff;
-  --rule: #d0d0d0;
-  --link: #0a4fb0;
-  --code-bg: #f2f2f2;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #ececec;
-    --muted: #b0b0b0;
-    --bg: #141414;
-    --rule: #3a3a3a;
-    --link: #8ab4ff;
-    --code-bg: #232323;
-  }
+:root {
+  --obsidian: #0a0e27;
+  --deep: #0c1131;
+  --panel: #12173a;
+  --rule: #1d2347;
+  --edge: #2f3561;
+  --dash: #3b4277;
+  --pearl: #fafafa;
+  --stone: #d2d3cc;
+  --muted: #a1a49c;
+  --green: #2c8136;
+  --green-deep: #23692b;
+  --yellow: #eebc15;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --pad: clamp(1.25rem, 4vw, 3.5rem);
+  color-scheme: dark;
+  accent-color: var(--green);
+  scrollbar-color: var(--edge) var(--obsidian);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--obsidian);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  margin: 0 auto;
-  max-width: 42rem;
-  padding: 1rem;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  color: var(--text);
-  background: var(--bg);
+  margin: 0;
+  color: var(--pearl);
+  background: var(--obsidian);
+  font: 400 1.0625rem/1.55 var(--sans);
+  caret-color: var(--yellow);
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--obsidian);
 }
 
 a {
-  color: var(--link);
+  color: var(--pearl);
+  text-decoration-color: var(--green);
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.22em;
 }
 
-a:focus-visible {
-  outline: 2px solid var(--link);
-  outline-offset: 2px;
+a:hover {
+  color: var(--yellow);
+}
+
+:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+code,
+dt,
+td,
+.sources,
+.rec,
+.caption {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .skip {
   position: absolute;
-  left: -9999px;
+  left: var(--pad);
+  top: -4rem;
+  background: var(--yellow);
+  color: var(--obsidian);
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  z-index: 2;
 }
 
 .skip:focus {
-  position: static;
+  top: 0.75rem;
 }
 
-.top {
+.skip:hover {
+  color: var(--obsidian);
+}
+
+/* ---------- top bar ---------- */
+
+.bar {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
-  padding-bottom: 0.75rem;
+  padding: 1.1rem var(--pad);
   border-bottom: 1px solid var(--rule);
+  font-size: 0.875rem;
+  color: var(--muted);
 }
 
-.name {
+.bar .name {
+  color: var(--pearl);
   font-weight: 700;
-  color: var(--text);
+  font-size: 1.125rem;
+  letter-spacing: 0.01em;
   text-decoration: none;
 }
 
-h1 {
-  font-size: 1.75rem;
-  line-height: 1.25;
-  margin: 1.5rem 0 0.75rem;
+.bar .tag {
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-size: 0.75rem;
 }
 
-h2 {
-  font-size: 1.25rem;
-  margin: 2rem 0 0.5rem;
+.bar .lang {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+/* ---------- the diagram (first viewport) ---------- */
+
+.hero {
+  padding: clamp(1.25rem, 3.5vh, 2.5rem) var(--pad) clamp(2.5rem, 6vh, 4.5rem);
+  display: grid;
+  gap: clamp(1.25rem, 3vh, 2.25rem);
+}
+
+.diagram {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(16rem, 19rem) minmax(6rem, 1fr) auto minmax(10rem, 12.5rem);
+  align-items: stretch;
+  column-gap: 0;
+  height: clamp(17rem, 44vh, 28rem);
+}
+
+.sources {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  align-items: center;
+  justify-items: end;
+  padding-right: 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.sources li.live {
+  color: var(--pearl);
+}
+
+.lines {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.line {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.line.dash {
+  stroke: var(--dash);
+  stroke-width: 2;
+  stroke-dasharray: 6 9;
+}
+
+.line.live {
+  stroke: var(--pearl);
+  stroke-width: 3;
+  animation: draw 1.6s var(--ease) both;
+}
+
+@keyframes draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.frame {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  border: 2px solid var(--pearl);
+  border-radius: 1.25rem;
+  background: linear-gradient(180deg, #151b47, var(--deep));
+  box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.6);
+}
+
+/* The point where every source meets the program. */
+.frame::before {
+  content: '';
+  position: absolute;
+  left: -0.5rem;
+  top: 50%;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: -0.4375rem;
+  border-radius: 50%;
+  background: var(--yellow);
+  box-shadow: 0 0 0 0.35rem rgb(238 188 21 / 0.18);
+  animation: meet 0.6s 1.2s var(--ease) both;
+}
+
+@keyframes meet {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+}
+
+.frame .rec {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--yellow);
+}
+
+.frame .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.frame .safe {
+  position: absolute;
+  inset: 13% 7% 19% 7%;
+  border: 1px dashed var(--dash);
+  border-radius: 0.375rem;
+}
+
+.frame .caption {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 1rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.figures {
+  margin: 0 0 0 clamp(1.5rem, 3vw, 3rem);
+  display: grid;
+  align-content: center;
+}
+
+.figures div {
+  border-top: 1px solid var(--rule);
+  padding: 0.8rem 0;
+}
+
+.figures div:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.figures dt {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--pearl);
+  letter-spacing: -0.01em;
+}
+
+.figures dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* ---------- the pitch and the action ---------- */
+
+.pitch {
+  max-width: 56rem;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.25rem, 4.4vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 760;
+  text-wrap: balance;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--yellow);
 }
 
 .lede {
-  font-size: 1.125rem;
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+  color: var(--stone);
+  max-width: 40rem;
 }
 
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.95em;
-  background: var(--code-bg);
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
-  overflow-wrap: anywhere;
+.run {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 0.875rem;
 }
 
+.run-label {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.run code {
+  font-size: 0.9375rem;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  user-select: all;
+}
+
+.go {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.875rem;
+  padding: 0 1.25rem;
+  border-radius: 0.5rem;
+  background: var(--green);
+  color: #fff;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.go:hover {
+  background: var(--green-deep);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.go:active {
+  transform: translateY(0);
+}
+
+/* ---------- sections below the fold ---------- */
+
+main > section:not(.hero) {
+  padding: clamp(3rem, 8vh, 5rem) var(--pad);
+  border-top: 1px solid var(--rule);
+}
+
+h2 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 720;
+  text-wrap: balance;
+}
+
+h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.0625rem;
+  font-weight: 680;
+}
+
+.section-lede {
+  margin: 0 0 2rem;
+  color: var(--stone);
+  max-width: 42rem;
+}
+
+.note {
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+/* The one real path, drawn as a solid line through three stops. */
+.path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 3rem);
+  position: relative;
+}
+
+.path li {
+  position: relative;
+  padding-top: 1.75rem;
+  border-top: 3px solid var(--pearl);
+}
+
+.path li::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--obsidian);
+  border: 3px solid var(--pearl);
+}
+
+.path li:last-child::before {
+  background: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.path p {
+  margin: 0;
+  color: var(--stone);
+}
+
+/* Measurements. */
 table {
-  width: 100%;
   border-collapse: collapse;
-  margin: 0.75rem 0;
+  width: 100%;
+  max-width: 48rem;
 }
 
 caption {
   text-align: left;
+  font-size: 0.8125rem;
   color: var(--muted);
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.75rem;
 }
 
 th,
 td {
   text-align: left;
-  padding: 0.4rem 0.5rem 0.4rem 0;
+  padding: 0.85rem 1rem 0.85rem 0;
   border-bottom: 1px solid var(--rule);
-  vertical-align: top;
+}
+
+thead th {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 1px solid var(--edge);
+}
+
+tbody th {
+  font-weight: 560;
 }
 
 td {
-  font-variant-numeric: tabular-nums;
+  font-size: 1.0625rem;
+  white-space: nowrap;
 }
 
-.foot {
-  margin-top: 2.5rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--rule);
+td.unmeasured {
   color: var(--muted);
+}
+
+/* What is not built: the dashed lines of the diagram, continued. */
+.dashed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+  max-width: 44rem;
+}
+
+.dashed li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  color: var(--stone);
+}
+
+.dashed li::before {
+  content: '';
+  height: 0;
+  border-top: 2px dashed var(--dash);
+}
+
+/* How it is used today. */
+.steps {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+  max-width: 44rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.steps li::marker {
+  color: var(--yellow);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.steps code,
+.note code {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.45rem;
   font-size: 0.9375rem;
+}
+
+/* ---------- footer ---------- */
+
+.foot {
+  padding: 2rem var(--pad) 3rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.foot p {
+  margin: 0.25rem 0;
+}
+
+/* ---------- the 404 ---------- */
+
+.missing {
+  padding: clamp(4rem, 16vh, 9rem) var(--pad);
+  max-width: 44rem;
+}
+
+/* ---------- narrow screens: the diagram stands up ---------- */
+
+@media (max-width: 62rem) {
+  .diagram {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'frame figures'
+      'sources sources';
+    height: auto;
+    row-gap: 1.5rem;
+    column-gap: 1.5rem;
+  }
+
+  .frame {
+    grid-area: frame;
+    height: clamp(17rem, 52vh, 26rem);
+    justify-self: start;
+  }
+
+  .figures {
+    grid-area: figures;
+    margin: 0;
+  }
+
+  .lines {
+    display: none;
+  }
+
+  .sources {
+    grid-area: sources;
+    grid-template-rows: none;
+    justify-items: stretch;
+    padding-right: 0;
+    white-space: normal;
+    gap: 0.55rem;
+  }
+
+  .sources li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .sources li::before {
+    content: '';
+    border-top: 2px dashed var(--dash);
+  }
+
+  .sources li.live::before {
+    border-top: 3px solid var(--pearl);
+  }
+
+  .path {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 34rem) {
+  .bar .tag {
+    display: none;
+  }
+
+  .diagram {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'frame'
+      'figures'
+      'sources';
+  }
+
+  .frame {
+    justify-self: center;
+  }
+
+  .figures {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 0.75rem;
+  }
+
+  .figures div:last-child {
+    border-bottom: 0;
+  }
+
+  .figures dt {
+    font-size: 0.9375rem;
+    white-space: nowrap;
+  }
+
+  /* On a phone the offer and the action come first; the diagram follows. */
+  .pitch {
+    order: -1;
+  }
+
+  .frame {
+    height: clamp(15rem, 42vh, 20rem);
+  }
+
+  .dashed li {
+    grid-template-columns: 2.5rem 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line.live,
+  .frame::before,
+  .go {
+    animation: none;
+    transition: none;
+  }
 }

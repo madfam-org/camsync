@@ -1,8 +1,4 @@
 <!doctype html>
-<!--
-  NOT DESIGNED. This page has not been through the impeccable design process (shape, build,
-  critique, polish) and must not be deployed until it has. Plain, semantic markup on purpose.
--->
 <html lang="{{v:lang}}">
   <head>
     <meta charset="utf-8" />
@@ -10,7 +6,8 @@
     <title>{{t:meta.title}}</title>
     <meta name="description" content="{{t:meta.description}}" />
     {{h:robots}}
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0A0E27" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="alternate" hreflang="es" href="/" />
     <link rel="alternate" hreflang="en" href="/en" />
@@ -19,35 +16,67 @@
   <body>
     <a class="skip" href="#main">{{t:skip}}</a>
 
-    <header class="top">
+    <header class="bar">
       <a class="name" href="{{v:home}}">camsync</a>
-      <a href="{{v:otherHome}}" hreflang="{{v:other}}" lang="{{v:other}}">{{t:nav.other}}</a>
+      <span class="tag">{{t:nav.tag}}</span>
+      <a class="lang" href="{{v:otherHome}}" hreflang="{{v:other}}" lang="{{v:other}}">{{t:nav.other}}</a>
     </header>
 
     <main id="main">
-      <section aria-labelledby="intro-title">
-        <h1 id="intro-title">{{t:intro.title}}</h1>
-        <p class="lede">{{t:intro.lede}}</p>
-        <p>{{t:intro.status}}</p>
+      <section class="hero" aria-labelledby="intro-title">
+        <figure class="diagram" aria-label="{{t:diagram.label}}">
+          <ul class="sources">
+            <li class="live">{{t:src.iphone}}</li>
+            <li>{{t:src.cam2}}</li>
+            <li>{{t:src.screen}}</li>
+            <li>{{t:src.titles}}</li>
+            <li>{{t:src.mic}}</li>
+          </ul>
+          <svg class="lines" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path class="line dash" d="M0 150 C 420 150, 620 250, 1000 250" />
+            <path class="line dash" d="M0 250 C 420 250, 640 250, 1000 250" />
+            <path class="line dash" d="M0 350 C 420 350, 620 250, 1000 250" />
+            <path class="line dash" d="M0 450 C 420 450, 600 250, 1000 250" />
+            <path class="line live" pathLength="1" d="M0 50 C 420 50, 600 250, 1000 250" />
+          </svg>
+          <div class="frame" aria-hidden="true">
+            <span class="rec"><span class="dot"></span>{{t:frame.rec}} 00:00:42</span>
+            <span class="safe"></span>
+            <span class="caption">{{t:frame.caption}}</span>
+          </div>
+          <dl class="figures">
+            <div><dt>2160 × 3840</dt><dd>{{t:fig.vertical}}</dd></div>
+            <div><dt>2160 × 2880</dt><dd>{{t:fig.sensor}}</dd></div>
+            <div><dt>1 s</dt><dd>{{t:fig.chunks}}</dd></div>
+          </dl>
+        </figure>
+
+        <div class="pitch">
+          <h1 id="intro-title">{{t:intro.title.a}} <em>{{t:intro.title.b}}</em></h1>
+          <p class="lede">{{t:intro.lede}}</p>
+          <div class="run">
+            <p class="run-label" id="run-label">{{t:run.label}}</p>
+            <code aria-describedby="run-label">node studio/server.mjs</code>
+            <a class="go" href="https://github.com/madfam-org/camsync">{{t:run.repo}}</a>
+          </div>
+        </div>
       </section>
 
-      <section aria-labelledby="today-title">
+      <section class="today" aria-labelledby="today-title">
         <h2 id="today-title">{{t:today.title}}</h2>
-        <ul>
-          <li>{{t:today.live}}</li>
-          <li>{{t:today.master}}</li>
-          <li>{{t:today.control}}</li>
-          <li>{{t:today.local}}</li>
-        </ul>
+        <p class="section-lede">{{t:today.lede}}</p>
+        <ol class="path">
+          <li><h3>{{t:today.phone.title}}</h3><p>{{t:today.phone}}</p></li>
+          <li><h3>{{t:today.net.title}}</h3><p>{{t:today.net}}</p></li>
+          <li><h3>{{t:today.mac.title}}</h3><p>{{t:today.mac}}</p></li>
+        </ol>
       </section>
 
-      <section aria-labelledby="measured-title">
+      <section class="measured" aria-labelledby="measured-title">
         <h2 id="measured-title">{{t:measured.title}}</h2>
-        <p>{{t:measured.intro}}</p>
+        <p class="section-lede">{{t:measured.intro}}</p>
         <table>
-          <caption>
-            {{t:measured.caption}}
-          </caption>
+          <caption>{{t:measured.caption}}</caption>
           <thead>
             <tr>
               <th scope="col">{{t:measured.col.what}}</th>
@@ -68,38 +97,36 @@
             </tr>
             <tr>
               <th scope="row">{{t:measured.live}}</th>
-              <td>{{t:measured.live.size}}</td>
+              <td class="unmeasured">{{t:measured.live.size}}</td>
               <td>{{t:measured.live.rate}}</td>
             </tr>
           </tbody>
         </table>
-        <p>{{t:measured.format}}</p>
-        <p>{{t:measured.remote}}</p>
-        <p>{{t:measured.limit}}</p>
+        <p class="note">{{t:measured.format}} {{t:measured.limit}}</p>
       </section>
 
-      <section aria-labelledby="missing-title">
-        <h2 id="missing-title">{{t:notyet.title}}</h2>
-        <p>{{t:notyet.intro}}</p>
-        <ul>
+      <section class="notyet" aria-labelledby="notyet-title">
+        <h2 id="notyet-title">{{t:notyet.title}}</h2>
+        <p class="section-lede">{{t:notyet.intro}}</p>
+        <ul class="dashed">
+          <li>{{t:notyet.multi}}</li>
           <li>{{t:notyet.titles}}</li>
           <li>{{t:notyet.log}}</li>
-          <li>{{t:notyet.multi}}</li>
           <li>{{t:notyet.render}}</li>
           <li>{{t:notyet.app}}</li>
         </ul>
       </section>
 
-      <section aria-labelledby="use-title">
+      <section class="use" aria-labelledby="use-title">
         <h2 id="use-title">{{t:use.title}}</h2>
-        <ol>
+        <ol class="steps">
           <li>{{t:use.1}}</li>
           <li>{{t:use.2}} <code>node studio/server.mjs</code></li>
           <li>{{t:use.3}}</li>
           <li>{{t:use.4}}</li>
         </ol>
-        <p>{{t:use.cert}}</p>
-        <p>{{t:use.source}}</p>
+        <p class="note">{{t:use.cert}}</p>
+        <p class="note">{{t:use.source}} <a href="https://github.com/madfam-org/camsync">github.com/madfam-org/camsync</a></p>
       </section>
     </main>
 
