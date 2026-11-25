@@ -32,7 +32,7 @@ export function configFromEnv(env = process.env) {
   if (name !== 'production' && name !== 'development') {
     throw new Error('CAMSYNC_ENV must be "production" or "development"');
   }
-  const hosts = (env.CAMSYNC_PUBLIC_HOSTS ?? 'obs.madfam.io')
+  const hosts = (env.CAMSYNC_PUBLIC_HOSTS ?? 'camsync.madfam.io')
     .split(',')
     .map((h) => h.trim().toLowerCase())
     .filter(Boolean);

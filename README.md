@@ -15,8 +15,8 @@ shape (16:9 or 4:3), lens and zoom are controlled from the Mac.
 - **Not built:** titles and overlays, an event log, several cameras, rendering through CEQ, a native
   app.
 - **Licence:** AGPL-3.0-only, ruled 2026-11-24.
-- **Repository:** public (ruled 2026-11-24). Not created on GitHub yet.
-- **Landing:** `obs.madfam.io`, in Spanish (`/`) and English (`/en`), not indexed. **The page has not
+- **Repository:** public (ruled 2026-11-24), [`madfam-org/camsync`](https://github.com/madfam-org/camsync), created 2026-11-25.
+- **Landing:** `camsync.madfam.io`, in Spanish (`/`) and English (`/en`), not indexed. **The page has not
   passed the impeccable design process and must not be deployed until it has.** Nothing is deployed.
 - **The studio** runs on a Mac on a local network. It is not served from the internet.
 
@@ -31,7 +31,7 @@ iPhone. Details, settings and what it writes: [`studio/README.md`](./studio/READ
 
 ## Landing
 
-`site/` is the landing for `obs.madfam.io`: a dependency-free Node server and one page in two
+`site/` is the landing for `camsync.madfam.io`: a dependency-free Node server and one page in two
 languages. Preview it locally with `node site/server/dev.mjs` (port 18770). Deployment contract:
 [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md).
 
@@ -54,7 +54,7 @@ site/server/           the landing's server, config, site builder, metrics, test
 site/web/              the landing's page template, dictionary (es, en), 404, styles, icon
 infra/k8s/production/  the landing's Kubernetes manifests
 enclii.yaml            the landing's Enclii manifest
-docs/                  repository boundary and deployment contract
+docs/                  repository boundary, deployment contract, naming research, positioning
 ```
 
 ## Contributing

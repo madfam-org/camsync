@@ -1,6 +1,6 @@
 name: Landing
 
-# The landing at obs.madfam.io (one service: camsync-landing). The studio is never built or
+# The landing at camsync.madfam.io (one service: camsync-landing). The studio is never built or
 # deployed: it runs on a Mac on a local network.
 #
 # Caller for Enclii's shared reusable workflow: buildx, push to GHCR as :${SHA}, keyless cosign sign

@@ -35,7 +35,7 @@ Two parts:
 
 - `studio/` — the working studio. It runs on a Mac on a local network and is **never deployed**; it is
   not served from the internet for now (owner ruling, 2026-11-24). See [`studio/README.md`](./studio/README.md).
-- `site/` — the landing for `obs.madfam.io` (see [The landing](#the-landing)). The only thing that
+- `site/` — the landing for `camsync.madfam.io` (see [The landing](#the-landing)). The only thing that
   could be deployed from this repository, and not yet.
 
 Measured on 2026-11-24 with one iPhone 15: vertical 2160x3840 masters at 30 fps (H.264 + AAC MP4),
@@ -54,13 +54,15 @@ Licensing, visibility, naming and publishing rulings belong to the owner: prepar
 
 ## Naming
 
-The tool is called **camsync** in every text, page and log. `obs` is only the label in host names
-(`obs.madfam.io`); it is never a brand, a product name, a title or a logo. Do not name third-party
-products in the landing's copy.
+**camsync is a codename** (owner direction, 2026-11-25): it names the tool, the repository, the
+services and the host `camsync.madfam.io` until a public brand is chosen. Call it camsync in every text,
+page and log, and do not present it as a final brand (no logo, no tagline built on the word). The brand
+research so far is in [`docs/NAMING.md`](./docs/NAMING.md). Do not name third-party products in the
+landing's copy.
 
 ## The landing
 
-`site/` is the landing for `https://obs.madfam.io` (owner direction, 2026-11-24): a dependency-free
+`site/` is the landing for `https://camsync.madfam.io` (owner direction, 2026-11-25): a dependency-free
 Node server (`site/server/`) and one page in Spanish and English (`site/web/`). It would be deployed
 through Enclii, dispatch-only; [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) is the contract.
 
@@ -69,9 +71,9 @@ through Enclii, dispatch-only; [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) is t
   That process writes `DESIGN.md`; do not write one by hand. [`PRODUCT.md`](./PRODUCT.md) holds the
   known facts and the questions still open for the owner.
 - Host names sit one level under `madfam.io` and are never nested. The platform's further surfaces
-  take a hyphenated name: `obs-app.madfam.io` (the studio, if it is ever served from the internet),
-  `obs-api.madfam.io`, `obs-ws.madfam.io` (live signalling, if it needs its own host),
-  `obs-admin.madfam.io`. None is declared; a host is declared only when a runtime exists for it, and
+  take a hyphenated name: `camsync-app.madfam.io` (the studio, if it is ever served from the internet),
+  `camsync-api.madfam.io`, `camsync-ws.madfam.io` (live signalling, if it needs its own host),
+  `camsync-admin.madfam.io`. None is declared; a host is declared only when a runtime exists for it, and
   each needs the owner's word.
 - The page is unindexed until the owner says otherwise (`INDEXABLE` in `site/server/config.mjs`).
 - The page states only what the tool does today and its measured limits. Work not built is labelled

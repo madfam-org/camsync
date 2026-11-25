@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * The server behind obs.madfam.io: one host, one stateless page in two languages.
+ * The server behind camsync.madfam.io: one host, one stateless page in two languages.
  *
  * - `/` (Spanish, the source language) and `/en`, built once at start-up.
  * - `/health` (liveness) and `/ready` (the site was built) answer GET and HEAD on any host, so the

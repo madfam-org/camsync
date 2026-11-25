@@ -4,7 +4,7 @@
 
 camsync is a **public** repository in the `madfam-org` organisation (owner ruling, 2026-11-24). It
 owns the camsync studio (the phone, viewer and control pages and the local relay that serves them) and
-the landing for `obs.madfam.io`.
+the landing for `camsync.madfam.io`.
 
 Keep here: reusable code, synthetic test fixtures, product documentation, deployment manifests with
 secret **names** only, and measurements stated as numbers (resolution, frames per second).

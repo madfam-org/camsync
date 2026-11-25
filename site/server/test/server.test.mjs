@@ -13,7 +13,7 @@ import { buildSite, fill } from '../site.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const read = (/** @type {string} */ path) => readFileSync(join(ROOT, path), 'utf8');
-const HOST = 'obs.madfam.io';
+const HOST = 'camsync.madfam.io';
 const site = buildSite();
 const config = configFromEnv({ CAMSYNC_ENV: 'production', CAMSYNC_REVISION: 'test' });
 /** @type {import('node:http').Server} */

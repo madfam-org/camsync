@@ -6,7 +6,7 @@ camsync is a browser-based vertical-video capture and production studio, a tool 
 production work: an iPhone opens a web page that captures its camera, sends a live view to a control
 panel on a Mac over the local network, and records the full-quality master, uploaded to the Mac in
 one-second chunks. The studio runs on a Mac on a local network and is never deployed. The repository
-also holds the landing for obs.madfam.io, which is not deployed and has not passed the design process.
+also holds the landing for camsync.madfam.io, which is not deployed and has not passed the design process.
 
 ## Read first
 
@@ -29,3 +29,6 @@ also holds the landing for obs.madfam.io, which is not deployed and has not pass
 Routine production operations are Enclii-first. Use Enclii web, API, or CLI
 before raw infrastructure tools. Direct `kubectl`, `helm`, SSH, provider CLIs,
 `docker exec`, or direct container access is bootstrap/break-glass only.
+
+- [docs/NAMING.md](docs/NAMING.md): camsync is a codename; the brand search and the names set aside
+- [docs/POSITIONING.md](docs/POSITIONING.md): what camsync is today and where it is meant to go

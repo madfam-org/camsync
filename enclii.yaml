@@ -1,21 +1,21 @@
 # Enclii manifest: the camsync landing.
 #
-# One project, ONE service, one image: a stateless landing at obs.madfam.io (owner direction,
-# 2026-11-24). The domain pins `port: 80` because the tunnel dials the Kubernetes Service (80), not the
+# One project, ONE service, one image: a stateless landing at camsync.madfam.io (owner direction,
+# 2026-11-25). The domain pins `port: 80` because the tunnel dials the Kubernetes Service (80), not the
 # container (8000); metadata.name IS the Kubernetes Service name.
 #
 # NOT DEPLOYED, and not deployable yet: the page has not been through the impeccable design process
 # (docs/DEPLOYMENT.md). Creating the host needs the owner's specific word.
 #
-# Host convention (owner, 2026-11-24): obs.madfam.io is the platform's landing; its other services
+# Host convention (owner, 2026-11-24; host renamed 2026-11-25): camsync.madfam.io is the platform's landing; its other services
 # follow the established convention: one level under madfam.io, never nested, the short label, a
 # hyphen and the surface:
-#   obs-app.madfam.io    the studio, if it is ever served from the internet
-#   obs-api.madfam.io    an interface
-#   obs-ws.madfam.io     live signalling, if it needs its own host
-#   obs-admin.madfam.io  an operator view
-# NONE of these is declared: only obs.madfam.io is. A host is declared here only when a runtime
-# exists for it, and each one needs the owner's word. `obs` is only a host label, never a name.
+#   camsync-app.madfam.io    the studio, if it is ever served from the internet
+#   camsync-api.madfam.io    an interface
+#   camsync-ws.madfam.io     live signalling, if it needs its own host
+#   camsync-admin.madfam.io  an operator view
+# NONE of these is declared: only camsync.madfam.io is. A host is declared here only when a runtime
+# exists for it, and each one needs the owner's word. camsync is a codename (docs/NAMING.md).
 #
 # The studio (studio/) is not deployed by this file: it runs on a Mac on a local network and is not
 # served from the internet for now (owner ruling, 2026-11-24).
@@ -41,7 +41,7 @@ metadata:
   description: camsync; the stateless landing, in Spanish and English
 spec:
   domains:
-    - name: obs.madfam.io
+    - name: camsync.madfam.io
       environment: production
       port: 80
 
@@ -51,8 +51,8 @@ spec:
     enabled: false
     entries:
       - name: camsync-landing
-        url: https://obs.madfam.io/health
-        href: https://obs.madfam.io
+        url: https://camsync.madfam.io/health
+        href: https://camsync.madfam.io
         group: camsync
         family: MADFAM Platform
         description: Landing (no sign-in, not indexed)
@@ -96,4 +96,4 @@ spec:
 
   dependencies:
     - platform: enclii
-      reason: deploy, domain (obs.madfam.io), status
+      reason: deploy, domain (camsync.madfam.io), status
