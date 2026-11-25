@@ -1,6 +1,6 @@
 # camsync Agent Operating Guide
 
-> Last Updated: 2026-11-24
+> Last Updated: 2026-11-25
 
 <!-- MADFAM-AGENTS-CANONICAL v1 -->
 
@@ -35,13 +35,13 @@ Two parts:
 
 - `studio/` — the working studio. It runs on a Mac on a local network and is **never deployed**; it is
   not served from the internet for now (owner ruling, 2026-11-24). See [`studio/README.md`](./studio/README.md).
-- `site/` — the landing for `camsync.madfam.io` (see [The landing](#the-landing)). The only thing that
-  could be deployed from this repository, and not yet.
+- `site/` — the landing for `camsync.madfam.io` (see [The landing](#the-landing)). The only thing
+  deployed from this repository; live since 2026-11-25, unindexed.
 
 Measured on 2026-11-24 with one iPhone 15: vertical 2160x3840 masters at 30 fps (H.264 + AAC MP4),
 4:3 full-sensor 2160x2880 at 29.9 fps, live view at 30 fps, remote start and stop working. Nothing else
-is claimed. Not built: titles and overlays, an event log, several cameras, rendering through CEQ, a
-native app.
+is claimed. Not built: titles and overlays, an event log, several cameras, masks (segmentation),
+rendering through CEQ, a native app.
 
 ## Boundary
 
@@ -87,6 +87,21 @@ Enclii, dispatch-only; [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) is the contr
 AGPL-3.0-only (owner ruling 2026-11-24), holder Innovaciones MADFAM S.A.S. de C.V. See `LICENSE` and
 `NOTICE`. Do not add a dependency whose licence is incompatible with AGPL-3.0-only. Today there are
 no dependencies at all; keep it that way unless a change needs one and says why.
+
+## Segmentation
+
+Owner ruling, 2026-11-25; not built. The live mask comes from the phone, the Mac only shows it, and
+the final mask is made on MADFAM's servers from the master and the operator's prompts, which are
+written to the event log. Only models whose code and weights are compatible with AGPL-3.0-only are
+used; SAM 3 is never shipped in camsync and may come later only as a plug-in the user installs under
+Meta's own terms.
+
+For anyone building it: the phone makes the live mask (MediaPipe in the browser; Apple Vision and
+EdgeTAM in a native app), the Mac makes none, and the servers propagate the final mask with SAM 2.1
+from the logged prompts. Read a model's licence for both code and weights before adding it. Do not
+add SAM 3 code or weights, or fetch them for the user. Grounding DINO's open weights and BiRefNet are
+held until their training-data terms are read. Every speed so far is published or estimated, none
+measured by us: confirm a model on the device or server before anything depends on it.
 
 ## Checks
 

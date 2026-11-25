@@ -1,6 +1,6 @@
 # camsync
 
-> Last Updated: 2026-11-24
+> Last Updated: 2026-11-25
 
 A browser-based vertical-video capture and production studio. An iPhone opens a web page that
 captures its camera, sends a live view to a control panel on a Mac over the local network, and records
@@ -12,8 +12,13 @@ shape (16:9 or 4:3), lens and zoom are controlled from the Mac.
 - **A working prototype**, moved into `studio/` unchanged. Measured on 2026-11-24 with one iPhone 15:
   vertical masters 2160x3840 at 30 fps (H.264 + AAC MP4), 4:3 full-sensor masters 2160x2880 at
   29.9 fps, live view at 30 fps, remote start and stop working. Not measured on any other phone.
-- **Not built:** titles and overlays, an event log, several cameras, rendering through CEQ, a native
-  app.
+- **Not built:** titles and overlays, an event log, several cameras, masks (segmentation), rendering
+  through CEQ, a native app.
+- **Segmentation** (owner ruling, 2026-11-25; not built): the live mask comes from the phone, the
+  Mac only shows it, and the final mask is made on MADFAM's servers from the master and the
+  operator's prompts, which are written to the event log. Only models whose code and weights are
+  compatible with AGPL-3.0-only are used; SAM 3 is never shipped in camsync and may come later only
+  as a plug-in the user installs under Meta's own terms.
 - **Licence:** AGPL-3.0-only, ruled 2026-11-24.
 - **Repository:** public (ruled 2026-11-24), [`madfam-org/camsync`](https://github.com/madfam-org/camsync), created 2026-11-25.
 - **Landing:** `camsync.madfam.io`, in Spanish (`/`) and English (`/en`), not indexed. Live since
