@@ -21,7 +21,7 @@ The Landing workflow is **dispatch-only**; a merge never builds or deploys by it
 
 | Host            | Surface                                                     | Declared |
 | --------------- | ----------------------------------------------------------- | -------- |
-| `obs.madfam.io` | The platform's landing (owner direction, 2026-11-24)         | yes      |
+| `camsync.madfam.io` | The platform's landing (owner direction, 2026-11-25)         | yes      |
 
 The convention for the platform's other services (owner, 2026-11-24): one level under `madfam.io`,
 never nested (MADFAM's wildcard certificate covers one level), the short label, a hyphen and the
@@ -29,13 +29,14 @@ surface:
 
 | Host                  | Surface                                              | Declared |
 | --------------------- | ---------------------------------------------------- | -------- |
-| `obs-app.madfam.io`   | the studio, if it is ever served from the internet   | no       |
-| `obs-api.madfam.io`   | an interface                                         | no       |
-| `obs-ws.madfam.io`    | live signalling, if it needs its own host            | no       |
-| `obs-admin.madfam.io` | an operator view                                     | no       |
+| `camsync-app.madfam.io`   | the studio, if it is ever served from the internet   | no       |
+| `camsync-api.madfam.io`   | an interface                                         | no       |
+| `camsync-ws.madfam.io`    | live signalling, if it needs its own host            | no       |
+| `camsync-admin.madfam.io` | an operator view                                     | no       |
 
 None of those exists. A host is declared in `enclii.yaml` only when a runtime exists for it, and each
-one needs the owner's word. `obs` is only a host label; the tool is called camsync everywhere else.
+one needs the owner's word. camsync is a codename (docs/NAMING.md): if a brand replaces it, the hosts
+follow the brand by the same convention.
 
 ## What is served
 
@@ -72,7 +73,7 @@ The image holds the server and the web files. The studio is not in it.
 | Variable               | Value           | Meaning                                   |
 | ---------------------- | --------------- | ----------------------------------------- |
 | `CAMSYNC_ENV`          | `production`    | turns on the host check, HSTS and caching |
-| `CAMSYNC_PUBLIC_HOSTS` | `obs.madfam.io` | the only host that gets the page          |
+| `CAMSYNC_PUBLIC_HOSTS` | `camsync.madfam.io` | the only host that gets the page          |
 | `CAMSYNC_PORT`         | `8000`          | the port the page is served on            |
 | `CAMSYNC_METRICS_PORT` | `9090`          | the internal port `/metrics` answers on   |
 | `CAMSYNC_REVISION`     | set at build    | the commit `/health` and `/ready` report  |
@@ -106,7 +107,7 @@ docker run --rm --read-only --tmpfs /tmp --user 1001:1001 --cap-drop ALL -p 127.
 ```
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: obs.madfam.io' http://127.0.0.1:18780/
+curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: camsync.madfam.io' http://127.0.0.1:18780/
 ```
 
 ```bash
@@ -121,7 +122,7 @@ Expect 200 and 421. (Not run: no image has been built.)
 
 1. The page has passed the impeccable design process.
 2. The owner has given his specific word to create the GitHub repository `madfam-org/camsync`, the
-   Enclii project `camsync`, and the host `obs.madfam.io` (DNS, route and certificate). Creating a host
+   Enclii project `camsync`, and the host `camsync.madfam.io` (DNS, route and certificate). Creating a host
    is never done on a general instruction.
 
 Run from a machine with an Enclii login (`enclii login`) and the GitHub CLI. Each apply follows its own
@@ -166,11 +167,11 @@ sign-in.
 6. **Probe** from outside. NOT RUN:
 
    ```bash
-   curl -s https://obs.madfam.io/health
+   curl -s https://camsync.madfam.io/health
    ```
 
    ```bash
-   curl -sI https://obs.madfam.io/ | grep -i -E '^(HTTP|x-robots-tag|content-security-policy)'
+   curl -sI https://camsync.madfam.io/ | grep -i -E '^(HTTP|x-robots-tag|content-security-policy)'
    ```
 
 The zone's edge adds an analytics script tag to HTML it serves to browsers. The page's content

@@ -68,7 +68,7 @@ spec:
             - name: CAMSYNC_ENV
               value: production
             - name: CAMSYNC_PUBLIC_HOSTS
-              value: obs.madfam.io
+              value: camsync.madfam.io
             - name: CAMSYNC_PORT
               value: '8000'
             - name: CAMSYNC_METRICS_PORT

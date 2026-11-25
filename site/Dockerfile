@@ -1,4 +1,4 @@
-# The landing for obs.madfam.io: ONE image, one stateless Node service with no dependency.
+# The landing for camsync.madfam.io: ONE image, one stateless Node service with no dependency.
 # /health and /ready on 8000, /metrics on 9090 (internal, never routed).
 #   docker build -f site/Dockerfile -t camsync-landing .   (context: the repository root)
 #
