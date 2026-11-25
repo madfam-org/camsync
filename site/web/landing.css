@@ -570,7 +570,8 @@ td.unmeasured {
     margin: 0;
   }
 
-  .lines {
+  .lines,
+  .frame::before {
     display: none;
   }
 
