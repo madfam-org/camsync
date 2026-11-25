@@ -56,3 +56,9 @@ desktop.ini
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# design-process working material (comps, mocks, captures)
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
+.impeccable/reference/

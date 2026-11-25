@@ -222,7 +222,8 @@ function renderRecording(p) {
   const behind = rec.recordedBytes - rec.uploadedBytes;
   $('recState').textContent =
     `${rec.name}.${rec.ext}: ${rec.state}, ${rec.seconds}s, ${megabytes(rec.uploadedBytes)} on the Mac` +
-    (behind > 0 ? `, ${megabytes(behind)} still on the phone` : '') + (rec.error ? ` — ${rec.error}` : '');
+    (behind > 0 ? `, ${megabytes(behind)} still on the phone` : '') + (rec.error ? ` — ${rec.error}` : '') +
+    (rec.warnings && rec.warnings.length ? ` — check: ${rec.warnings.join('; ')}` : '');
 }
 
 async function refresh() {
@@ -239,8 +240,21 @@ async function refresh() {
   $('recordings').replaceChildren(...state.recordings.map((r) => {
     const li = document.createElement('li');
     const name = document.createElement('span'); name.textContent = r.file;
-    const size = document.createElement('span'); size.textContent = megabytes(r.bytes);
+    const t = r.take;
+    const v = t && t.video;
+    const measured = !t ? 'measuring…'
+      : v ? `${v.width}×${v.height}, ${v.fps ?? '?'} fps, ${t.duration ? t.duration.toFixed(1) + ' s' : '? s'}`
+      : 'not measured';
+    const size = document.createElement('span');
+    size.textContent = `${measured} · ${megabytes(r.bytes)}`;
     li.append(name, size);
+    if (t && t.warnings && t.warnings.length) {
+      li.title = t.warnings.join('\n');
+      const warn = document.createElement('span');
+      warn.className = 'error';
+      warn.textContent = `⚠ ${t.warnings.join('; ')}`;
+      li.append(warn);
+    }
     return li;
   }));
 }

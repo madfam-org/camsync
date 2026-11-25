@@ -17,6 +17,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { TAKE_NAME, takeDir, masterPath, finishTake, listTakes } from './takes.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -135,19 +136,14 @@ let phoneStatusAt = 0;
 const uploads = new Map();
 const viewerReports = new Map();   // viewer id -> { report, at }
 
+// Each recording is a take: a folder with its master and, once the phone says it is done, take.json.
 function listRecordings() {
-  try {
-    return fs.readdirSync(OUT_DIR)
-      .filter((f) => /\.(mp4|webm|mov)$/i.test(f))
-      .map((f) => {
-        const st = fs.statSync(path.join(OUT_DIR, f));
-        return { file: f, bytes: st.size, modified: st.mtimeMs };
-      })
-      .sort((a, b) => b.modified - a.modified)
-      .slice(0, 12);
-  } catch {
-    return [];
-  }
+  return listTakes(OUT_DIR).map((t) => ({
+    file: `${t.name}/${t.master}`,
+    bytes: t.bytes,
+    modified: t.modified,
+    take: t.take,
+  }));
 }
 
 let qrSvg;
@@ -255,13 +251,14 @@ function handleUpload(req, res, url) {
   const name = url.searchParams.get('name') || '';
   const seq = Number(url.searchParams.get('seq'));
   const ext = url.searchParams.get('ext') === 'webm' ? 'webm' : 'mp4';
-  if (!/^[\w-]{1,80}$/.test(name) || !Number.isInteger(seq) || seq < 0) {
+  if (!TAKE_NAME.test(name) || !Number.isInteger(seq) || seq < 0) {
     return sendJson(res, 400, { error: 'bad name or seq' });
   }
-  const file = path.join(OUT_DIR, `${name}.${ext}`);
+  const file = masterPath(OUT_DIR, name, ext);
   let state = uploads.get(name);
   if (seq === 0) {
-    if (fs.existsSync(file)) return sendJson(res, 409, { error: 'a recording with this name already exists' });
+    if (fs.existsSync(takeDir(OUT_DIR, name))) return sendJson(res, 409, { error: 'a take with this name already exists' });
+    fs.mkdirSync(takeDir(OUT_DIR, name), { recursive: true });
     state = { next: 0, bytes: 0, file };
     uploads.set(name, state);
   }
@@ -283,6 +280,23 @@ function handleUpload(req, res, url) {
   req.on('error', fail);
 }
 
+// The phone says the last chunk is in; the master is measured and take.json written beside it.
+async function handleTakeDone(req, res, url) {
+  const name = url.searchParams.get('name') || '';
+  const ext = url.searchParams.get('ext') === 'webm' ? 'webm' : 'mp4';
+  const state = uploads.get(name);
+  if (!TAKE_NAME.test(name) || !state) return sendJson(res, 409, { error: 'unknown take' });
+  const info = await readJson(req);
+  const take = await finishTake(OUT_DIR, name, ext, {
+    startedAt: Number(info.startedAt) || undefined,
+    stoppedAt: Number(info.stoppedAt) || undefined,
+    targetFps: Number(info.targetFps) || undefined,
+    camera: info.camera ?? null,
+  });
+  uploads.delete(name);
+  sendJson(res, 200, take);
+}
+
 function statusBody() {
   const now = Date.now();
   return {
@@ -302,6 +316,7 @@ async function handleApi(req, res, url, local) {
     case 'GET /api/poll': return handlePoll(req, res, url);
     case 'POST /api/send': return handleSend(req, res);
     case 'POST /api/upload': return handleUpload(req, res, url);
+    case 'POST /api/take-done': return handleTakeDone(req, res, url);
     case 'POST /api/status':
       phoneStatus = await readJson(req);
       phoneStatusAt = Date.now();

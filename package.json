@@ -11,8 +11,8 @@
   },
   "scripts": {
     "studio": "node studio/server.mjs",
-    "test": "node --test site/server/test/*.test.mjs",
-    "check": "node --check studio/server.mjs && node --check studio/public/shared.js && for f in site/server/*.mjs site/server/test/*.mjs; do node --check \"$f\" || exit 1; done",
+    "test": "node --test site/server/test/*.test.mjs studio/test/*.test.mjs",
+    "check": "node --check studio/public/shared.js && for f in studio/*.mjs studio/test/*.mjs site/server/*.mjs site/server/test/*.mjs; do node --check \"$f\" || exit 1; done",
     "landing:dev": "node site/server/dev.mjs"
   }
 }
