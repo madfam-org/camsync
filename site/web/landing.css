@@ -246,6 +246,7 @@ td,
   border-radius: 50%;
   background: var(--yellow);
   box-shadow: 0 0 0 3px var(--obsidian);
+  z-index: 2;
   animation: meet 0.6s 1.2s var(--ease) both;
 }
 
@@ -298,6 +299,11 @@ td,
 
 .feed-in {
   stroke-width: 3;
+}
+
+/* The live line enters where the meeting point sits: the left edge here, the top edge when the diagram stands up. */
+.feed-in.from-top {
+  display: none;
 }
 
 .frame .safe {
@@ -643,8 +649,23 @@ td.unmeasured {
     border-bottom: 0;
   }
 
-  .lines {
+  .lines,
+  .feed-in.from-left {
     display: none;
+  }
+
+  .feed-in.from-top {
+    display: inline;
+  }
+
+  /* The live line comes down the middle of the frame; the timer would sit under it. */
+  .frame .rec-time {
+    display: none;
+  }
+
+  /* Below desktop the offer and the action come first; the diagram follows. */
+  .pitch {
+    order: -1;
   }
 
   .lines-v {
@@ -702,11 +723,6 @@ td.unmeasured {
   .figures dt {
     font-size: 0.9375rem;
     white-space: nowrap;
-  }
-
-  /* On a phone the offer and the action come first; the diagram follows. */
-  .pitch {
-    order: -1;
   }
 
   .frame {
