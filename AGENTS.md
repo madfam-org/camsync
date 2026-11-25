@@ -63,12 +63,13 @@ landing's copy.
 ## The landing
 
 `site/` is the landing for `https://camsync.madfam.io` (owner direction, 2026-11-25): a dependency-free
-Node server (`site/server/`) and one page in Spanish and English (`site/web/`). It would be deployed
-through Enclii, dispatch-only; [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) is the contract.
+Node server (`site/server/`) and one page in Spanish and English (`site/web/`). It is deployed through
+Enclii, dispatch-only; [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) is the contract.
 
-- **Not designed, not deployable.** The page has not been through the impeccable design process
-  (shape, build, critique, polish), with its telemetry off. It must not be deployed until it has.
-  That process writes `DESIGN.md`; do not write one by hand. [`PRODUCT.md`](./PRODUCT.md) holds the
+- **Designed and live.** The page passed the impeccable design process (2026-11-25) and is served at
+  `camsync.madfam.io`, unindexed. Any change to it goes through that process again, and
+  [`DESIGN.md`](./DESIGN.md) (written by the process from the build) is its system; do not edit it
+  by hand. [`PRODUCT.md`](./PRODUCT.md) holds the
   known facts and the questions still open for the owner.
 - Host names sit one level under `madfam.io` and are never nested. The platform's further surfaces
   take a hyphenated name: `camsync-app.madfam.io` (the studio, if it is ever served from the internet),

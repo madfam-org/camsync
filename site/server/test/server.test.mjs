@@ -147,7 +147,6 @@ test('the page makes no request to another origin and ships no script', () => {
       const url = m[1] ?? m[2];
       assert.ok(url.startsWith('/') && !url.startsWith('//'), `${name}: ${url} is not same-origin`);
     }
-    // The repository is not published yet, so the page links nowhere outside itself.
     // One outbound link is allowed: the public repository, the page's own action (owner, 2026-11-25).
     for (const m of html.matchAll(/<a[^>]+href="((?:https?:)?\/\/[^"]*)"/g)) {
       assert.equal(m[1], 'https://github.com/madfam-org/camsync', `${name}: link to another origin`);
