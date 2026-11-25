@@ -70,7 +70,7 @@ dt,
 td,
 .sources,
 .rec,
-.caption {
+.mono {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
 }
@@ -137,10 +137,12 @@ td,
 .diagram {
   margin: 0;
   display: grid;
-  grid-template-columns: minmax(16rem, 19rem) minmax(6rem, 1fr) auto minmax(10rem, 12.5rem);
+  grid-template-columns: minmax(0, 1fr) auto minmax(10rem, 12.5rem);
+  grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   column-gap: 0;
-  height: clamp(17rem, 44vh, 28rem);
+  /* What the headline, lede and action leave of the viewport, so the action stays in view. */
+  height: clamp(13rem, calc(100svh - 29rem), 28rem);
 }
 
 .sources {
@@ -149,12 +151,20 @@ td,
   padding: 0;
   display: grid;
   grid-template-rows: repeat(5, 1fr);
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  z-index: 1;
   align-items: center;
-  justify-items: end;
-  padding-right: 1.25rem;
+  justify-items: start;
   font-size: 0.8125rem;
   color: var(--muted);
   white-space: nowrap;
+}
+
+/* Each label rides just above the start of its line. */
+.sources li {
+  transform: translateY(-0.95rem);
 }
 
 .sources li.live {
@@ -162,9 +172,15 @@ td,
 }
 
 .lines {
+  grid-column: 1;
+  grid-row: 1;
   width: 100%;
   height: 100%;
   overflow: visible;
+}
+
+.lines-v {
+  display: none;
 }
 
 .line {
@@ -194,6 +210,20 @@ td,
   }
 }
 
+/* Standing diagram: the live line draws downward, toward the frame. */
+.lines-v .line.live {
+  animation-name: draw-down;
+}
+
+@keyframes draw-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 .frame {
   position: relative;
   height: 100%;
@@ -215,7 +245,7 @@ td,
   margin-top: -0.4375rem;
   border-radius: 50%;
   background: var(--yellow);
-  box-shadow: 0 0 0 0.35rem rgb(238 188 21 / 0.18);
+  box-shadow: 0 0 0 3px var(--obsidian);
   animation: meet 0.6s 1.2s var(--ease) both;
 }
 
@@ -242,6 +272,32 @@ td,
   height: 0.5rem;
   border-radius: 50%;
   background: currentColor;
+}
+
+/* The one real source, drawn inside the program: the live line enters and becomes the picture. */
+.frame .feed {
+  position: absolute;
+  inset: 13% 7% 19% 7%;
+  width: 86%;
+  height: 68%;
+  overflow: visible;
+}
+
+.feed-line,
+.feed-in {
+  fill: none;
+  stroke: var(--pearl);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.feed-line.faint {
+  stroke: var(--muted);
+}
+
+.feed-in {
+  stroke-width: 3;
 }
 
 .frame .safe {
@@ -306,6 +362,7 @@ h1 {
 }
 
 h1 em {
+  display: block;
   font-style: normal;
   color: var(--yellow);
 }
@@ -475,6 +532,7 @@ td {
 
 td.unmeasured {
   color: var(--muted);
+  font-family: var(--sans);
 }
 
 /* What is not built: the dashed lines of the diagram, continued. */
@@ -549,42 +607,69 @@ td.unmeasured {
 /* ---------- narrow screens: the diagram stands up ---------- */
 
 @media (max-width: 62rem) {
+  /* The diagram stands up: the sources above, their lines converging down onto the frame's top edge. */
   .diagram {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
     grid-template-areas:
-      'frame figures'
-      'sources sources';
+      'sources'
+      'vlines'
+      'frame'
+      'figures';
     height: auto;
-    row-gap: 1.5rem;
-    column-gap: 1.5rem;
+    row-gap: 0;
   }
 
   .frame {
     grid-area: frame;
     height: clamp(17rem, 52vh, 26rem);
-    justify-self: start;
+    justify-self: center;
+  }
+
+  .frame::before {
+    left: 50%;
+    top: -0.5rem;
+    margin: 0 0 0 -0.4375rem;
   }
 
   .figures {
     grid-area: figures;
-    margin: 0;
+    margin: 1.75rem 0 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
   }
 
-  .lines,
-  .frame::before {
+  .figures div:last-child {
+    border-bottom: 0;
+  }
+
+  .lines {
     display: none;
+  }
+
+  .lines-v {
+    display: block;
+    grid-area: vlines;
+    width: 100%;
+    max-width: 26rem;
+    height: 6rem;
+    justify-self: center;
+    overflow: visible;
   }
 
   .sources {
     grid-area: sources;
+    grid-column: auto;
+    grid-row: auto;
     grid-template-rows: none;
     justify-items: stretch;
-    padding-right: 0;
     white-space: normal;
     gap: 0.55rem;
+    margin-bottom: 1rem;
   }
 
   .sources li {
+    transform: none;
     display: grid;
     grid-template-columns: 2.5rem 1fr;
     align-items: center;
@@ -610,25 +695,8 @@ td.unmeasured {
     display: none;
   }
 
-  .diagram {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'frame'
-      'figures'
-      'sources';
-  }
-
-  .frame {
-    justify-self: center;
-  }
-
   .figures {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: 0.75rem;
-  }
-
-  .figures div:last-child {
-    border-bottom: 0;
   }
 
   .figures dt {
@@ -647,6 +715,13 @@ td.unmeasured {
 
   .dashed li {
     grid-template-columns: 2.5rem 1fr;
+  }
+}
+
+/* On short desktop screens the frame is small: keep only the shape on it. */
+@media (min-width: 62.01rem) and (max-height: 50rem) {
+  .frame .caption-text {
+    display: none;
   }
 }
 

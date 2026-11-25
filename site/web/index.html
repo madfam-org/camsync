@@ -32,6 +32,13 @@
             <li>{{t:src.titles}}</li>
             <li>{{t:src.mic}}</li>
           </ul>
+          <svg class="lines-v" viewBox="0 0 500 160" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path class="line dash" d="M150 0 C 150 90, 250 80, 250 160" />
+            <path class="line dash" d="M250 0 C 250 60, 250 100, 250 160" />
+            <path class="line dash" d="M350 0 C 350 90, 250 80, 250 160" />
+            <path class="line dash" d="M450 0 C 450 100, 250 70, 250 160" />
+            <path class="line live" d="M50 0 C 50 100, 250 70, 250 160" />
+          </svg>
           <svg class="lines" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <path class="line dash" d="M0 150 C 420 150, 620 250, 1000 250" />
             <path class="line dash" d="M0 250 C 420 250, 640 250, 1000 250" />
@@ -41,8 +48,15 @@
           </svg>
           <div class="frame" aria-hidden="true">
             <span class="rec"><span class="dot"></span>{{t:frame.rec}} 00:00:42</span>
+            <svg class="feed" viewBox="0 0 90 160" preserveAspectRatio="xMidYMid meet" focusable="false">
+              <path class="feed-in" d="M0 80 C 14 80, 22 96, 30 108" />
+              <path class="feed-line" d="M8 128 H 82" />
+              <circle class="feed-line" cx="45" cy="70" r="12.5" />
+              <path class="feed-line" d="M21 128 C 21 102, 32 90, 45 90 C 58 90, 69 102, 69 128" />
+              <path class="feed-line faint" d="M58 40 H 76 M62 46 H 76" />
+            </svg>
             <span class="safe"></span>
-            <span class="caption">{{t:frame.caption}}</span>
+            <span class="caption"><span class="mono">9:16</span><span class="caption-text"> · {{t:frame.caption}}</span></span>
           </div>
           <dl class="figures">
             <div><dt>2160 × 3840</dt><dd>{{t:fig.vertical}}</dd></div>
@@ -120,6 +134,7 @@
       <section class="use" aria-labelledby="use-title">
         <h2 id="use-title">{{t:use.title}}</h2>
         <ol class="steps">
+          <li>{{t:use.clone}} <code>git clone https://github.com/madfam-org/camsync</code></li>
           <li>{{t:use.1}}</li>
           <li>{{t:use.2}} <code>node studio/server.mjs</code></li>
           <li>{{t:use.3}}</li>
